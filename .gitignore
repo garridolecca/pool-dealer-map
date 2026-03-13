@@ -1,0 +1,28 @@
+# Raw scraper data (large files, not needed for the app)
+*_raw.json
+*_dealers.json
+*_stores.json
+pap_all_stores.json
+jacuzzi_sundance_dealers.json
+caldera_freeflow_dealers.json
+
+# Scraper scripts (dev only)
+fetch_*.js
+test_*.js
+inspect_*.js
+save_outputs.js
+analyze.js
+
+# Source location files (merged into dealers-data.js)
+poolcorp_locations.js
+leslies_locations.js
+pap_locations.js
+heritage_locations.js
+bioguard_output.js
+
+# Reference data
+pool_hottub_dealers_dataset.csv
+dealer_data_reference.txt
+
+# Build
+build-data.js
