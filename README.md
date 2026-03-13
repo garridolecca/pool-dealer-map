@@ -6,18 +6,33 @@ Interactive ArcGIS JavaScript application mapping pool and hot tub chemical deal
 
 ## What This Maps
 
-| Category | Companies | Mapped | Total Market |
-|----------|-----------|--------|--------------|
-| **Wholesale Distributors** | PoolCorp/SCP, Heritage Pool Supply | 70+ | ~600+ |
-| **Retail Chains** | Leslie's Pool Supplies (NYSE: LESL) | 22+ | 972 |
-| **Franchises** | Pinch A Penny (PoolCorp-owned), ASP | 15+ | 291+ |
-| **Equipment Manufacturers** | Hayward, Pentair, Fluidra/Zodiac | HQ + dist | ~2,777 (Hayward alone) |
-| **Chemical Competitors** | BioGuard/BioLab (KIK/Solenis), Natural Chemistry | HQ + mfg | ~1,500 (BioGuard) |
-| **Hot Tub Dealers** | Hot Spring (Pentair), Jacuzzi, Bullfrog, Sundance | 30+ | 700-850+ (Hot Spring) |
-| **Big Box Retail** | Home Depot, Lowe's, Walmart, Costco, Ace, True Value | HQ/representative | ~19,000+ |
-| **Online Retailers** | In The Swim (Leslie's), Pool Supply World, Doheny's, PoolSupplies.com | Warehouses | 30+ DCs |
-| **Independents** | Regional dealers, builders, service companies | Key locations | Thousands |
-| **King Technology** | FROG Products HQ | Minnetonka, MN | 1 |
+**Total: 4,716 dealer locations with real addresses and coordinates**
+
+| Category | Companies | Mapped |
+|----------|-----------|--------|
+| **Wholesale Distributors** | PoolCorp/SCP, Heritage Pool Supply | 528 |
+| **Retail Chains** | Leslie's Pool Supplies (NYSE: LESL) | 877 |
+| **Franchises** | Pinch A Penny (PoolCorp-owned) | 309 |
+| **Chemical Dealers** | BioGuard/BioLab (KIK/Solenis) authorized retailers | 863 |
+| **Hot Tub - Jacuzzi** | Jacuzzi dealer network | 1,150 |
+| **Hot Tub - Hot Spring** | Hot Spring Spas (Pentair/Watkins) | 593 |
+| **Hot Tub - Sundance** | Sundance Spas (Jacuzzi Group) | 284 |
+| **Equipment Dealers** | Pentair authorized dealers | 98 |
+| **Big Box Retail** | Home Depot, Lowe's, Walmart, Costco, Ace | HQ/representative |
+| **Online Retailers** | In The Swim, Pool Supply World, Doheny's, PoolSupplies.com | HQ/warehouses |
+| **King Technology** | FROG Products HQ | Minnetonka, MN |
+
+### Top States by Dealer Count
+| State | Dealers | State | Dealers |
+|-------|---------|-------|---------|
+| TX | 488 | NJ | 111 |
+| FL | 468 | IL | 105 |
+| CA | 438 | OH | 102 |
+| GA | 200 | WA | 102 |
+| AZ | 171 | MI | 101 |
+| NY | 156 | VA | 100 |
+| PA | 134 | TN | 82 |
+| NC | 114 | | |
 
 ## Key Ownership Consolidation
 
