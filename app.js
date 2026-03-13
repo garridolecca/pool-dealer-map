@@ -2,23 +2,13 @@ require([
   "esri/Map",
   "esri/views/MapView",
   "esri/layers/FeatureLayer",
-  "esri/layers/support/Field",
   "esri/Graphic",
   "esri/geometry/Point",
-  "esri/renderers/UniqueValueRenderer",
-  "esri/symbols/SimpleMarkerSymbol",
-  "esri/PopupTemplate",
-  "esri/widgets/Legend",
   "esri/widgets/Search",
   "esri/widgets/Home",
   "esri/widgets/BasemapToggle",
   "esri/widgets/Expand",
-  "esri/layers/support/FeatureReductionCluster",
-], function (
-  Map, MapView, FeatureLayer, Field, Graphic, Point,
-  UniqueValueRenderer, SimpleMarkerSymbol, PopupTemplate,
-  Legend, Search, Home, BasemapToggle, Expand, FeatureReductionCluster
-) {
+], function (Map, MapView, FeatureLayer, Graphic, Point, Search, Home, BasemapToggle, Expand) {
 
   // ── Map ──────────────────────────────────────────────────
   const map = new Map({ basemap: "dark-gray-vector" });
@@ -28,7 +18,6 @@ require([
     map: map,
     center: [-98.5, 39.5],
     zoom: 4,
-    padding: { top: 0 },
     popup: {
       dockEnabled: true,
       dockOptions: { position: "bottom-right", breakpoint: false },
@@ -38,103 +27,92 @@ require([
   });
 
   // ── Build graphics from data ─────────────────────────────
-  const graphics = DEALER_DATABASE.map((d, i) => {
-    return new Graphic({
+  console.log("Building graphics from", DEALER_DATABASE.length, "dealers...");
+
+  const graphics = [];
+  for (let i = 0; i < DEALER_DATABASE.length; i++) {
+    const d = DEALER_DATABASE[i];
+    if (!d.lat || !d.lng || d.lat === 0 || d.lng === 0) continue;
+    graphics.push(new Graphic({
       geometry: new Point({ longitude: d.lng, latitude: d.lat }),
       attributes: {
         ObjectID: i + 1,
-        name: d.name,
-        company: d.company,
-        type: d.type,
-        typeLabel: TYPE_LABELS[d.type] || d.type,
-        category: d.category,
+        name: d.name || "",
+        company: d.company || "",
+        type: d.type || "",
+        typeLabel: (TYPE_LABELS && TYPE_LABELS[d.type]) || d.type || "",
+        category: d.category || "",
         address: d.address || "",
-        city: d.city,
-        state: d.state,
+        city: d.city || "",
+        state: d.state || "",
         zip: d.zip || "",
         phone: d.phone || "",
         website: d.website || "",
         products: d.products || "",
         privateLabel: d.privateLabel ? "Yes" : "No",
         notes: d.notes || "",
-        fullAddress: `${d.address || ""}, ${d.city}, ${d.state} ${d.zip || ""}`,
+        fullAddress: ((d.address || "") + ", " + (d.city || "") + ", " + (d.state || "") + " " + (d.zip || "")).trim(),
       },
-    });
+    }));
+  }
+  console.log("Created", graphics.length, "valid graphics");
+
+  // ── Renderer (autocast) ──────────────────────────────────
+  const uniqueInfos = Object.entries(COMPANY_COLORS).map(function(entry) {
+    var company = entry[0];
+    var color = entry[1];
+    return {
+      value: company,
+      symbol: {
+        type: "simple-marker",
+        color: color,
+        size: company === "King Technology" ? 16 : 8,
+        outline: {
+          color: company === "King Technology" ? "#ffffff" : [255, 255, 255, 0.4],
+          width: company === "King Technology" ? 3 : 0.5,
+        },
+        style: company === "King Technology" ? "diamond" : "circle",
+      },
+      label: company,
+    };
   });
 
-  // ── Renderer by company ──────────────────────────────────
-  const uniqueInfos = Object.entries(COMPANY_COLORS).map(([company, color]) => ({
-    value: company,
-    symbol: new SimpleMarkerSymbol({
-      color: color,
-      size: company === "King Technology" ? 16 : 9,
-      outline: {
-        color: company === "King Technology" ? "#ffffff" : "rgba(255,255,255,0.4)",
-        width: company === "King Technology" ? 3 : 1,
-      },
-      style: company === "King Technology" ? "diamond" : "circle",
-    }),
-    label: company,
-  }));
-
-  const companyRenderer = new UniqueValueRenderer({
+  var companyRenderer = {
+    type: "unique-value",
     field: "company",
-    defaultSymbol: new SimpleMarkerSymbol({
+    defaultSymbol: {
+      type: "simple-marker",
       color: "#888888",
-      size: 8,
-      outline: { color: "rgba(255,255,255,0.3)", width: 1 },
-    }),
+      size: 7,
+      outline: { color: [255, 255, 255, 0.3], width: 0.5 },
+    },
     defaultLabel: "Other",
     uniqueValueInfos: uniqueInfos,
-  });
+  };
 
-  // ── Renderer by type ─────────────────────────────────────
-  const typeInfos = Object.entries(TYPE_COLORS).map(([type, color]) => ({
-    value: type,
-    symbol: new SimpleMarkerSymbol({
-      color: color,
-      size: 9,
-      outline: { color: "rgba(255,255,255,0.4)", width: 1 },
-    }),
-    label: TYPE_LABELS[type] || type,
-  }));
-
-  const typeRenderer = new UniqueValueRenderer({
-    field: "type",
-    defaultSymbol: new SimpleMarkerSymbol({
-      color: "#888888",
-      size: 8,
-      outline: { color: "rgba(255,255,255,0.3)", width: 1 },
-    }),
-    defaultLabel: "Other",
-    uniqueValueInfos: typeInfos,
-  });
-
-  // ── Popup template ───────────────────────────────────────
-  const popupTemplate = new PopupTemplate({
+  // ── Popup ────────────────────────────────────────────────
+  var popupTemplate = {
     title: "{name}",
-    content: [
-      {
-        type: "fields",
-        fieldInfos: [
-          { fieldName: "company", label: "Company" },
-          { fieldName: "typeLabel", label: "Dealer Type" },
-          { fieldName: "category", label: "Category" },
-          { fieldName: "fullAddress", label: "Address" },
-          { fieldName: "phone", label: "Phone" },
-          { fieldName: "website", label: "Website" },
-          { fieldName: "products", label: "Products" },
-          { fieldName: "privateLabel", label: "Private Label Chemicals" },
-          { fieldName: "notes", label: "Notes" },
-        ],
-      },
-    ],
-  });
+    content: [{
+      type: "fields",
+      fieldInfos: [
+        { fieldName: "company", label: "Company" },
+        { fieldName: "typeLabel", label: "Dealer Type" },
+        { fieldName: "category", label: "Category" },
+        { fieldName: "fullAddress", label: "Address" },
+        { fieldName: "phone", label: "Phone" },
+        { fieldName: "website", label: "Website" },
+        { fieldName: "products", label: "Products" },
+        { fieldName: "privateLabel", label: "Private Label Chemicals" },
+        { fieldName: "notes", label: "Notes" },
+      ],
+    }],
+  };
 
   // ── Clustering ───────────────────────────────────────────
-  const clusterConfig = {
+  var clusterConfig = {
     type: "cluster",
-    clusterRadius: "80px",
+    clusterRadius: "100px",
     clusterMinSize: "24px",
     clusterMaxSize: "60px",
     popupTemplate: {
@@ -153,29 +131,27 @@ require([
     }],
   };
 
-  // ── Feature Layer (client-side) ──────────────────────────
-  const fields = [
-    new Field({ name: "ObjectID", alias: "ObjectID", type: "oid" }),
-    new Field({ name: "name", alias: "Name", type: "string" }),
-    new Field({ name: "company", alias: "Company", type: "string" }),
-    new Field({ name: "type", alias: "Type", type: "string" }),
-    new Field({ name: "typeLabel", alias: "Dealer Type", type: "string" }),
-    new Field({ name: "category", alias: "Category", type: "string" }),
-    new Field({ name: "address", alias: "Address", type: "string" }),
-    new Field({ name: "city", alias: "City", type: "string" }),
-    new Field({ name: "state", alias: "State", type: "string" }),
-    new Field({ name: "zip", alias: "ZIP", type: "string" }),
-    new Field({ name: "phone", alias: "Phone", type: "string" }),
-    new Field({ name: "website", alias: "Website", type: "string" }),
-    new Field({ name: "products", alias: "Products", type: "string" }),
-    new Field({ name: "privateLabel", alias: "Private Label", type: "string" }),
-    new Field({ name: "notes", alias: "Notes", type: "string" }),
-    new Field({ name: "fullAddress", alias: "Full Address", type: "string" }),
-  ];
-
-  const dealerLayer = new FeatureLayer({
+  // ── Feature Layer ────────────────────────────────────────
+  var dealerLayer = new FeatureLayer({
     source: graphics,
-    fields: fields,
+    fields: [
+      { name: "ObjectID", alias: "ObjectID", type: "oid" },
+      { name: "name", alias: "Name", type: "string" },
+      { name: "company", alias: "Company", type: "string" },
+      { name: "type", alias: "Type", type: "string" },
+      { name: "typeLabel", alias: "Dealer Type", type: "string" },
+      { name: "category", alias: "Category", type: "string" },
+      { name: "address", alias: "Address", type: "string" },
+      { name: "city", alias: "City", type: "string" },
+      { name: "state", alias: "State", type: "string" },
+      { name: "zip", alias: "ZIP", type: "string" },
+      { name: "phone", alias: "Phone", type: "string" },
+      { name: "website", alias: "Website", type: "string" },
+      { name: "products", alias: "Products", type: "string" },
+      { name: "privateLabel", alias: "Private Label", type: "string" },
+      { name: "notes", alias: "Notes", type: "string" },
+      { name: "fullAddress", alias: "Full Address", type: "string" },
+    ],
     objectIdField: "ObjectID",
     geometryType: "point",
     spatialReference: { wkid: 4326 },
@@ -187,9 +163,10 @@ require([
   });
 
   map.add(dealerLayer);
+  console.log("Layer added to map");
 
   // ── Heatmap renderer ─────────────────────────────────────
-  const heatmapRenderer = {
+  var heatmapRenderer = {
     type: "heatmap",
     colorStops: [
       { color: "rgba(0, 0, 0, 0)", ratio: 0 },
@@ -206,20 +183,16 @@ require([
   };
 
   // ── Widgets ──────────────────────────────────────────────
-  view.when(() => {
-    // Home button
-    const home = new Home({ view: view });
+  view.when(function() {
+    console.log("View ready");
+
+    var home = new Home({ view: view });
     view.ui.add(home, "top-left");
 
-    // Basemap toggle
-    const basemapToggle = new BasemapToggle({
-      view: view,
-      nextBasemap: "satellite",
-    });
+    var basemapToggle = new BasemapToggle({ view: view, nextBasemap: "satellite" });
     view.ui.add(basemapToggle, "bottom-right");
 
-    // Search widget
-    const searchWidget = new Search({
+    var searchWidget = new Search({
       view: view,
       includeDefaultSources: false,
       sources: [{
@@ -232,39 +205,41 @@ require([
         placeholder: "Search dealers...",
       }],
     });
-    const searchExpand = new Expand({
-      view: view,
-      content: searchWidget,
-      expandIcon: "search",
-      group: "top-right",
-    });
+    var searchExpand = new Expand({ view: view, content: searchWidget, expandIcon: "search" });
     view.ui.add(searchExpand, "top-right");
 
     updateDealerCount();
     buildFilterUI();
     buildLegend();
     updateStats();
+  }).catch(function(err) {
+    console.error("View failed:", err);
   });
 
   // ── Dealer count chip ────────────────────────────────────
   function updateDealerCount(count) {
-    const chip = document.getElementById("dealer-count-chip");
-    const c = count !== undefined ? count : DEALER_DATABASE.length;
-    chip.textContent = `${c.toLocaleString()} Dealers`;
+    var chip = document.getElementById("dealer-count-chip");
+    if (!chip) return;
+    var c = count !== undefined ? count : graphics.length;
+    chip.textContent = c.toLocaleString() + " Dealers";
   }
 
   // ── Build filter UI ──────────────────────────────────────
   function buildFilterUI() {
-    // Type filters
-    const typeContainer = document.getElementById("type-filters");
-    const types = [...new Set(DEALER_DATABASE.map(d => d.type))];
-    types.forEach(t => {
-      const label = document.createElement("label");
-      const cb = document.createElement("calcite-checkbox");
+    var typeContainer = document.getElementById("type-filters");
+    if (!typeContainer) return;
+
+    var types = [];
+    var typeSet = {};
+    DEALER_DATABASE.forEach(function(d) { if (!typeSet[d.type]) { typeSet[d.type] = true; types.push(d.type); } });
+
+    types.forEach(function(t) {
+      var label = document.createElement("label");
+      var cb = document.createElement("calcite-checkbox");
       cb.setAttribute("checked", "");
       cb.setAttribute("value", t);
       cb.classList.add("type-checkbox");
-      const dot = document.createElement("span");
+      var dot = document.createElement("span");
       dot.className = "color-dot";
       dot.style.backgroundColor = TYPE_COLORS[t] || "#888";
       label.appendChild(cb);
@@ -273,16 +248,21 @@ require([
       typeContainer.appendChild(label);
     });
 
-    // Company filters
-    const companyContainer = document.getElementById("company-filters");
-    const companies = [...new Set(DEALER_DATABASE.map(d => d.company))].sort();
-    companies.forEach(c => {
-      const label = document.createElement("label");
-      const cb = document.createElement("calcite-checkbox");
+    var companyContainer = document.getElementById("company-filters");
+    if (!companyContainer) return;
+
+    var companies = [];
+    var compSet = {};
+    DEALER_DATABASE.forEach(function(d) { if (!compSet[d.company]) { compSet[d.company] = true; companies.push(d.company); } });
+    companies.sort();
+
+    companies.forEach(function(c) {
+      var label = document.createElement("label");
+      var cb = document.createElement("calcite-checkbox");
       cb.setAttribute("checked", "");
       cb.setAttribute("value", c);
       cb.classList.add("company-checkbox");
-      const dot = document.createElement("span");
+      var dot = document.createElement("span");
       dot.className = "color-dot";
       dot.style.backgroundColor = COMPANY_COLORS[c] || "#888";
       label.appendChild(cb);
@@ -291,43 +271,48 @@ require([
       companyContainer.appendChild(label);
     });
 
-    // Product filters
-    const productContainer = document.getElementById("product-filters");
-    const productKeywords = ["Chemicals", "Equipment", "Hot tubs", "Service", "Automation"];
-    productKeywords.forEach(p => {
-      const label = document.createElement("label");
-      const cb = document.createElement("calcite-checkbox");
-      cb.setAttribute("checked", "");
-      cb.setAttribute("value", p);
-      cb.classList.add("product-checkbox");
-      label.appendChild(cb);
-      label.appendChild(document.createTextNode(p));
-      productContainer.appendChild(label);
-    });
+    var productContainer = document.getElementById("product-filters");
+    if (productContainer) {
+      ["Chemicals", "Equipment", "Hot tubs", "Service", "Automation"].forEach(function(p) {
+        var label = document.createElement("label");
+        var cb = document.createElement("calcite-checkbox");
+        cb.setAttribute("checked", "");
+        cb.setAttribute("value", p);
+        cb.classList.add("product-checkbox");
+        label.appendChild(cb);
+        label.appendChild(document.createTextNode(p));
+        productContainer.appendChild(label);
+      });
+    }
 
-    // State combobox
-    const stateCombo = document.getElementById("state-filter");
-    const statesInData = [...new Set(DEALER_DATABASE.map(d => d.state))].sort();
-    statesInData.forEach(s => {
-      const item = document.createElement("calcite-combobox-item");
-      item.setAttribute("value", s);
-      item.setAttribute("text-label", s);
-      stateCombo.appendChild(item);
-    });
+    var stateCombo = document.getElementById("state-filter");
+    if (stateCombo) {
+      var statesInData = [];
+      var stateSet = {};
+      DEALER_DATABASE.forEach(function(d) { if (d.state && !stateSet[d.state]) { stateSet[d.state] = true; statesInData.push(d.state); } });
+      statesInData.sort();
+      statesInData.forEach(function(s) {
+        var item = document.createElement("calcite-combobox-item");
+        item.setAttribute("value", s);
+        item.setAttribute("text-label", s);
+        stateCombo.appendChild(item);
+      });
+    }
   }
 
   // ── Build legend ─────────────────────────────────────────
   function buildLegend() {
-    const container = document.getElementById("legend-container");
+    var container = document.getElementById("legend-container");
+    if (!container) return;
 
-    // By company
-    const compSection = document.createElement("div");
+    var compSection = document.createElement("div");
     compSection.className = "legend-section";
     compSection.innerHTML = "<h4>By Company</h4>";
-    Object.entries(COMPANY_COLORS).forEach(([name, color]) => {
-      const item = document.createElement("div");
+    Object.keys(COMPANY_COLORS).forEach(function(name) {
+      var color = COMPANY_COLORS[name];
+      var item = document.createElement("div");
       item.className = "legend-item";
-      const sym = document.createElement("div");
+      var sym = document.createElement("div");
       sym.className = "legend-symbol";
       sym.style.backgroundColor = color;
       if (name === "King Technology") {
@@ -344,14 +329,14 @@ require([
     });
     container.appendChild(compSection);
 
-    // By type
-    const typeSection = document.createElement("div");
+    var typeSection = document.createElement("div");
     typeSection.className = "legend-section";
     typeSection.innerHTML = "<h4>By Dealer Type</h4>";
-    Object.entries(TYPE_COLORS).forEach(([type, color]) => {
-      const item = document.createElement("div");
+    Object.keys(TYPE_COLORS).forEach(function(type) {
+      var color = TYPE_COLORS[type];
+      var item = document.createElement("div");
       item.className = "legend-item";
-      const sym = document.createElement("div");
+      var sym = document.createElement("div");
       sym.className = "legend-symbol square";
       sym.style.backgroundColor = color;
       item.appendChild(sym);
@@ -363,125 +348,128 @@ require([
 
   // ── Stats ────────────────────────────────────────────────
   function updateStats(filteredData) {
-    const data = filteredData || DEALER_DATABASE;
-    const total = data.length;
+    var data = filteredData || DEALER_DATABASE;
+    var total = data.length;
 
-    // By type
-    const typeCounts = {};
-    data.forEach(d => { typeCounts[d.type] = (typeCounts[d.type] || 0) + 1; });
-    const typeContainer = document.getElementById("stats-type");
-    typeContainer.innerHTML = "";
-    Object.entries(typeCounts).sort((a, b) => b[1] - a[1]).forEach(([type, count]) => {
-      typeContainer.innerHTML += `
-        <div class="stat-row">
-          <span class="stat-label"><span class="color-dot" style="background:${TYPE_COLORS[type] || '#888'}"></span> ${TYPE_LABELS[type] || type}</span>
-          <div class="stat-bar-container"><div class="stat-bar" style="width:${(count/total*100)}%;background:${TYPE_COLORS[type] || '#888'}"></div></div>
-          <span class="stat-value">${count}</span>
-        </div>`;
-    });
+    var typeCounts = {};
+    data.forEach(function(d) { typeCounts[d.type] = (typeCounts[d.type] || 0) + 1; });
+    var typeContainer = document.getElementById("stats-type");
+    if (typeContainer) {
+      typeContainer.innerHTML = "";
+      Object.entries(typeCounts).sort(function(a, b) { return b[1] - a[1]; }).forEach(function(entry) {
+        var type = entry[0], count = entry[1];
+        typeContainer.innerHTML +=
+          '<div class="stat-row">' +
+          '<span class="stat-label"><span class="color-dot" style="background:' + (TYPE_COLORS[type] || '#888') + '"></span> ' + (TYPE_LABELS[type] || type) + '</span>' +
+          '<div class="stat-bar-container"><div class="stat-bar" style="width:' + (count / total * 100) + '%;background:' + (TYPE_COLORS[type] || '#888') + '"></div></div>' +
+          '<span class="stat-value">' + count + '</span>' +
+          '</div>';
+      });
+    }
 
-    // By company
-    const companyCounts = {};
-    data.forEach(d => { companyCounts[d.company] = (companyCounts[d.company] || 0) + 1; });
-    const compContainer = document.getElementById("stats-company");
-    compContainer.innerHTML = "";
-    Object.entries(companyCounts).sort((a, b) => b[1] - a[1]).forEach(([company, count]) => {
-      compContainer.innerHTML += `
-        <div class="stat-row">
-          <span class="stat-label"><span class="color-dot" style="background:${COMPANY_COLORS[company] || '#888'}"></span> ${company}</span>
-          <div class="stat-bar-container"><div class="stat-bar" style="width:${(count/total*100)}%;background:${COMPANY_COLORS[company] || '#888'}"></div></div>
-          <span class="stat-value">${count}</span>
-        </div>`;
-    });
+    var companyCounts = {};
+    data.forEach(function(d) { companyCounts[d.company] = (companyCounts[d.company] || 0) + 1; });
+    var compContainer = document.getElementById("stats-company");
+    if (compContainer) {
+      compContainer.innerHTML = "";
+      Object.entries(companyCounts).sort(function(a, b) { return b[1] - a[1]; }).forEach(function(entry) {
+        var company = entry[0], count = entry[1];
+        compContainer.innerHTML +=
+          '<div class="stat-row">' +
+          '<span class="stat-label"><span class="color-dot" style="background:' + (COMPANY_COLORS[company] || '#888') + '"></span> ' + company + '</span>' +
+          '<div class="stat-bar-container"><div class="stat-bar" style="width:' + (count / total * 100) + '%;background:' + (COMPANY_COLORS[company] || '#888') + '"></div></div>' +
+          '<span class="stat-value">' + count + '</span>' +
+          '</div>';
+      });
+    }
 
-    // Top states
-    const stateCounts = {};
-    data.forEach(d => { stateCounts[d.state] = (stateCounts[d.state] || 0) + 1; });
-    const stateContainer = document.getElementById("stats-states");
-    stateContainer.innerHTML = "";
-    const maxStateCount = Math.max(...Object.values(stateCounts));
-    Object.entries(stateCounts).sort((a, b) => b[1] - a[1]).slice(0, 15).forEach(([state, count]) => {
-      stateContainer.innerHTML += `
-        <div class="stat-row">
-          <span class="stat-label">${state}</span>
-          <div class="stat-bar-container"><div class="stat-bar" style="width:${(count/maxStateCount*100)}%"></div></div>
-          <span class="stat-value">${count}</span>
-        </div>`;
-    });
+    var stateCounts = {};
+    data.forEach(function(d) { if (d.state) stateCounts[d.state] = (stateCounts[d.state] || 0) + 1; });
+    var stateContainer = document.getElementById("stats-states");
+    if (stateContainer) {
+      stateContainer.innerHTML = "";
+      var maxStateCount = Math.max.apply(null, Object.values(stateCounts));
+      Object.entries(stateCounts).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 15).forEach(function(entry) {
+        var state = entry[0], count = entry[1];
+        stateContainer.innerHTML +=
+          '<div class="stat-row">' +
+          '<span class="stat-label">' + state + '</span>' +
+          '<div class="stat-bar-container"><div class="stat-bar" style="width:' + (count / maxStateCount * 100) + '%"></div></div>' +
+          '<span class="stat-value">' + count + '</span>' +
+          '</div>';
+      });
+    }
 
-    // Summary
-    const summaryContainer = document.getElementById("stats-summary");
-    const privateLabelCount = data.filter(d => d.privateLabel).length;
-    const hotTubCount = data.filter(d => d.category === "hot-tub").length;
-    const chemCount = data.filter(d => d.products && d.products.toLowerCase().includes("chemical")).length;
-    const statesCount = new Set(data.map(d => d.state)).size;
-    summaryContainer.innerHTML = `
-      <div class="stat-row"><span class="stat-label">Total Dealers</span><span class="stat-value">${total}</span></div>
-      <div class="stat-row"><span class="stat-label">States Covered</span><span class="stat-value">${statesCount}</span></div>
-      <div class="stat-row"><span class="stat-label">Sell Chemicals</span><span class="stat-value">${chemCount}</span></div>
-      <div class="stat-row"><span class="stat-label">Hot Tub Dealers</span><span class="stat-value">${hotTubCount}</span></div>
-      <div class="stat-row"><span class="stat-label">Private Label Chemicals</span><span class="stat-value">${privateLabelCount}</span></div>
-      <div class="stat-row"><span class="stat-label">Companies Tracked</span><span class="stat-value">${new Set(data.map(d => d.company)).size}</span></div>
-    `;
+    var summaryContainer = document.getElementById("stats-summary");
+    if (summaryContainer) {
+      var privateLabelCount = data.filter(function(d) { return d.privateLabel; }).length;
+      var hotTubCount = data.filter(function(d) { return d.category === "hot-tub"; }).length;
+      var chemCount = data.filter(function(d) { return d.products && d.products.toLowerCase().indexOf("chemical") >= 0; }).length;
+      var statesCount = Object.keys(stateCounts).length;
+      summaryContainer.innerHTML =
+        '<div class="stat-row"><span class="stat-label">Total Dealers</span><span class="stat-value">' + total + '</span></div>' +
+        '<div class="stat-row"><span class="stat-label">States Covered</span><span class="stat-value">' + statesCount + '</span></div>' +
+        '<div class="stat-row"><span class="stat-label">Sell Chemicals</span><span class="stat-value">' + chemCount + '</span></div>' +
+        '<div class="stat-row"><span class="stat-label">Hot Tub Dealers</span><span class="stat-value">' + hotTubCount + '</span></div>' +
+        '<div class="stat-row"><span class="stat-label">Private Label Chemicals</span><span class="stat-value">' + privateLabelCount + '</span></div>' +
+        '<div class="stat-row"><span class="stat-label">Companies Tracked</span><span class="stat-value">' + Object.keys(companyCounts).length + '</span></div>';
+    }
   }
 
   // ── Filter logic ─────────────────────────────────────────
   function applyFilters() {
-    const searchText = (document.getElementById("search-input").value || "").toLowerCase();
+    var searchText = (document.getElementById("search-input").value || "").toLowerCase();
 
-    const checkedTypes = [...document.querySelectorAll(".type-checkbox")]
-      .filter(cb => cb.hasAttribute("checked"))
-      .map(cb => cb.getAttribute("value"));
+    var checkedTypes = [];
+    document.querySelectorAll(".type-checkbox").forEach(function(cb) {
+      if (cb.hasAttribute("checked")) checkedTypes.push(cb.getAttribute("value"));
+    });
 
-    const checkedCompanies = [...document.querySelectorAll(".company-checkbox")]
-      .filter(cb => cb.hasAttribute("checked"))
-      .map(cb => cb.getAttribute("value"));
+    var checkedCompanies = [];
+    document.querySelectorAll(".company-checkbox").forEach(function(cb) {
+      if (cb.hasAttribute("checked")) checkedCompanies.push(cb.getAttribute("value"));
+    });
 
-    const checkedProducts = [...document.querySelectorAll(".product-checkbox")]
-      .filter(cb => cb.hasAttribute("checked"))
-      .map(cb => cb.getAttribute("value"));
-
-    const stateCombo = document.getElementById("state-filter");
-    const selectedStates = stateCombo.selectedItems
-      ? Array.from(stateCombo.selectedItems).map(i => i.getAttribute("value"))
-      : [];
-
-    // Build where clause
-    const clauses = [];
-
-    if (checkedTypes.length > 0 && checkedTypes.length < Object.keys(TYPE_LABELS).length) {
-      clauses.push(`type IN ('${checkedTypes.join("','")}')`);
+    var stateCombo = document.getElementById("state-filter");
+    var selectedStates = [];
+    if (stateCombo && stateCombo.selectedItems) {
+      Array.from(stateCombo.selectedItems).forEach(function(item) {
+        selectedStates.push(item.getAttribute("value"));
+      });
     }
 
-    if (checkedCompanies.length > 0) {
-      const allCompanies = [...new Set(DEALER_DATABASE.map(d => d.company))];
-      if (checkedCompanies.length < allCompanies.length) {
-        clauses.push(`company IN ('${checkedCompanies.join("','")}')`);
-      }
+    var clauses = [];
+    var allTypes = Object.keys(TYPE_LABELS);
+    if (checkedTypes.length > 0 && checkedTypes.length < allTypes.length) {
+      clauses.push("type IN ('" + checkedTypes.join("','") + "')");
+    }
+
+    var allCompanies = Object.keys(COMPANY_COLORS);
+    if (checkedCompanies.length > 0 && checkedCompanies.length < allCompanies.length) {
+      clauses.push("company IN ('" + checkedCompanies.join("','") + "')");
     }
 
     if (selectedStates.length > 0) {
-      clauses.push(`state IN ('${selectedStates.join("','")}')`);
+      clauses.push("state IN ('" + selectedStates.join("','") + "')");
     }
 
     if (searchText) {
-      clauses.push(`(LOWER(name) LIKE '%${searchText}%' OR LOWER(company) LIKE '%${searchText}%' OR LOWER(city) LIKE '%${searchText}%' OR LOWER(state) LIKE '%${searchText}%')`);
+      var escaped = searchText.replace(/'/g, "''");
+      clauses.push("(LOWER(name) LIKE '%" + escaped + "%' OR LOWER(company) LIKE '%" + escaped + "%' OR LOWER(city) LIKE '%" + escaped + "%' OR LOWER(state) LIKE '%" + escaped + "%')");
     }
 
-    const where = clauses.length > 0 ? clauses.join(" AND ") : "1=1";
-    dealerLayer.definitionExpression = where;
+    dealerLayer.definitionExpression = clauses.length > 0 ? clauses.join(" AND ") : "1=1";
 
-    // Update stats with filtered data
-    const filteredData = DEALER_DATABASE.filter(d => {
-      if (checkedTypes.length > 0 && !checkedTypes.includes(d.type)) return false;
-      if (checkedCompanies.length > 0 && !checkedCompanies.includes(d.company)) return false;
-      if (selectedStates.length > 0 && !selectedStates.includes(d.state)) return false;
+    var filteredData = DEALER_DATABASE.filter(function(d) {
+      if (checkedTypes.length > 0 && checkedTypes.length < allTypes.length && checkedTypes.indexOf(d.type) < 0) return false;
+      if (checkedCompanies.length > 0 && checkedCompanies.length < allCompanies.length && checkedCompanies.indexOf(d.company) < 0) return false;
+      if (selectedStates.length > 0 && selectedStates.indexOf(d.state) < 0) return false;
       if (searchText) {
-        const s = searchText;
-        if (!d.name.toLowerCase().includes(s) &&
-            !d.company.toLowerCase().includes(s) &&
-            !d.city.toLowerCase().includes(s) &&
-            !d.state.toLowerCase().includes(s)) return false;
+        var s = searchText;
+        if ((d.name || "").toLowerCase().indexOf(s) < 0 &&
+            (d.company || "").toLowerCase().indexOf(s) < 0 &&
+            (d.city || "").toLowerCase().indexOf(s) < 0 &&
+            (d.state || "").toLowerCase().indexOf(s) < 0) return false;
       }
       return true;
     });
@@ -490,16 +478,18 @@ require([
     updateStats(filteredData);
   }
 
-  document.getElementById("btn-apply-filters").addEventListener("click", applyFilters);
+  var applyBtn = document.getElementById("btn-apply-filters");
+  if (applyBtn) applyBtn.addEventListener("click", applyFilters);
 
-  document.getElementById("btn-clear-filters").addEventListener("click", () => {
-    document.querySelectorAll(".type-checkbox, .company-checkbox, .product-checkbox").forEach(cb => {
+  var clearBtn = document.getElementById("btn-clear-filters");
+  if (clearBtn) clearBtn.addEventListener("click", function() {
+    document.querySelectorAll(".type-checkbox, .company-checkbox, .product-checkbox").forEach(function(cb) {
       cb.setAttribute("checked", "");
     });
     document.getElementById("search-input").value = "";
-    const stateCombo = document.getElementById("state-filter");
-    if (stateCombo.selectedItems) {
-      Array.from(stateCombo.selectedItems).forEach(item => {
+    var stateCombo = document.getElementById("state-filter");
+    if (stateCombo && stateCombo.selectedItems) {
+      Array.from(stateCombo.selectedItems).forEach(function(item) {
         item.removeAttribute("selected");
       });
     }
@@ -508,59 +498,52 @@ require([
     updateStats();
   });
 
-  // ── Search input live filter ─────────────────────────────
-  document.getElementById("search-input").addEventListener("calciteInputTextInput", () => {
-    applyFilters();
-  });
+  var searchInput = document.getElementById("search-input");
+  if (searchInput) searchInput.addEventListener("calciteInputTextInput", function() { applyFilters(); });
 
   // ── Header actions ───────────────────────────────────────
-  document.getElementById("btn-zoom-all").addEventListener("click", () => {
+  var zoomAllBtn = document.getElementById("btn-zoom-all");
+  if (zoomAllBtn) zoomAllBtn.addEventListener("click", function() {
     view.goTo({ center: [-98.5, 39.5], zoom: 4 });
   });
 
-  let clusterEnabled = true;
-  document.getElementById("btn-toggle-cluster").addEventListener("click", () => {
+  var clusterEnabled = true;
+  var clusterBtn = document.getElementById("btn-toggle-cluster");
+  if (clusterBtn) clusterBtn.addEventListener("click", function() {
     clusterEnabled = !clusterEnabled;
-    if (clusterEnabled) {
-      dealerLayer.featureReduction = clusterConfig;
-    } else {
-      dealerLayer.featureReduction = null;
-    }
+    dealerLayer.featureReduction = clusterEnabled ? clusterConfig : null;
   });
 
-  let heatmapEnabled = false;
-  document.getElementById("btn-toggle-heat").addEventListener("click", () => {
+  var heatmapEnabled = false;
+  var heatBtn = document.getElementById("btn-toggle-heat");
+  if (heatBtn) heatBtn.addEventListener("click", function() {
     heatmapEnabled = !heatmapEnabled;
     if (heatmapEnabled) {
       dealerLayer.renderer = heatmapRenderer;
       dealerLayer.featureReduction = null;
     } else {
       dealerLayer.renderer = companyRenderer;
-      if (clusterEnabled) {
-        dealerLayer.featureReduction = clusterConfig;
-      }
+      if (clusterEnabled) dealerLayer.featureReduction = clusterConfig;
     }
   });
 
   // ── Action bar panel switching ───────────────────────────
-  const actionBar = document.querySelector("calcite-action-bar");
-  const panels = document.querySelectorAll("calcite-shell-panel[slot='panel-start'] calcite-panel");
+  var actionBar = document.querySelector("calcite-action-bar");
+  var panels = document.querySelectorAll("calcite-shell-panel[slot='panel-start'] calcite-panel");
 
   if (actionBar) {
-    actionBar.addEventListener("click", (e) => {
-      const action = e.target.closest("calcite-action");
+    actionBar.addEventListener("click", function(e) {
+      var action = e.target.closest("calcite-action");
       if (!action) return;
-      const panelId = action.getAttribute("data-action-id");
+      var panelId = action.getAttribute("data-action-id");
       if (!panelId) return;
 
-      // Toggle active state
-      document.querySelectorAll("calcite-action-bar calcite-action").forEach(a => {
+      document.querySelectorAll("calcite-action-bar calcite-action").forEach(function(a) {
         a.removeAttribute("active");
       });
       action.setAttribute("active", "");
 
-      // Show corresponding panel
-      panels.forEach(p => {
+      panels.forEach(function(p) {
         if (p.getAttribute("data-panel-id") === panelId) {
           p.removeAttribute("hidden");
         } else {
@@ -569,60 +552,55 @@ require([
       });
     });
 
-    // Activate filters by default
-    const filtersAction = document.querySelector('[data-action-id="filters"]');
+    var filtersAction = document.querySelector('[data-action-id="filters"]');
     if (filtersAction) filtersAction.setAttribute("active", "");
   }
 
   // ── Detail panel ─────────────────────────────────────────
-  const detailPanel = document.getElementById("detail-panel");
-  const detailBody = document.getElementById("dealer-detail-body");
+  var detailPanel = document.getElementById("detail-panel");
+  var detailBody = document.getElementById("dealer-detail-body");
 
-  view.on("click", (event) => {
-    view.hitTest(event).then((response) => {
-      const result = response.results.find(r => r.graphic && r.graphic.layer === dealerLayer);
-      if (result && result.graphic.attributes.name) {
-        const attrs = result.graphic.attributes;
-        detailPanel.removeAttribute("collapsed");
+  view.on("click", function(event) {
+    view.hitTest(event).then(function(response) {
+      var result = response.results.find(function(r) { return r.graphic && r.graphic.layer === dealerLayer; });
+      if (result && result.graphic.attributes && result.graphic.attributes.name) {
+        var attrs = result.graphic.attributes;
+        if (detailPanel) detailPanel.removeAttribute("collapsed");
 
-        const color = COMPANY_COLORS[attrs.company] || "#888";
-        const threatLevel = attrs.privateLabel === "Yes" ? "COMPETITOR (Private Label)" : "Potential Partner";
-        const threatColor = attrs.privateLabel === "Yes" ? "#e74c3c" : "#2ecc71";
+        var color = COMPANY_COLORS[attrs.company] || "#888";
+        var threatLevel = attrs.privateLabel === "Yes" ? "COMPETITOR (Private Label)" : "Potential Partner";
+        var threatColor = attrs.privateLabel === "Yes" ? "#e74c3c" : "#2ecc71";
 
-        detailBody.innerHTML = `
-          <div class="detail-section">
-            <h4 style="color:${color}">Company</h4>
-            <div class="detail-field"><span class="label">Name</span><span class="value">${attrs.name}</span></div>
-            <div class="detail-field"><span class="label">Company</span><span class="value" style="color:${color}">${attrs.company}</span></div>
-            <div class="detail-field"><span class="label">Type</span><span class="value">${attrs.typeLabel}</span></div>
-            <div class="detail-field"><span class="label">Category</span><span class="value">${attrs.category}</span></div>
-          </div>
-          <div class="detail-section">
-            <h4>Location</h4>
-            <div class="detail-field"><span class="label">Address</span><span class="value">${attrs.fullAddress}</span></div>
-            <div class="detail-field"><span class="label">Phone</span><span class="value">${attrs.phone || "N/A"}</span></div>
-            <div class="detail-field"><span class="label">Website</span><span class="value"><a href="https://${attrs.website}" target="_blank" style="color:var(--calcite-color-brand)">${attrs.website}</a></span></div>
-          </div>
-          <div class="detail-section">
-            <h4>Products & Intelligence</h4>
-            <div class="detail-field"><span class="label">Products</span><span class="value">${attrs.products}</span></div>
-            <div class="detail-field"><span class="label">Private Label</span><span class="value" style="color:${attrs.privateLabel === 'Yes' ? '#e74c3c' : '#2ecc71'}">${attrs.privateLabel}</span></div>
-            <div class="detail-field"><span class="label">Threat Level</span><span class="value" style="color:${threatColor};font-weight:700">${threatLevel}</span></div>
-          </div>
-          ${attrs.notes ? `
-          <div class="detail-section">
-            <h4>Intelligence Notes</h4>
-            <calcite-notice open kind="${attrs.privateLabel === 'Yes' ? 'danger' : 'brand'}" scale="s">
-              <div slot="message">${attrs.notes}</div>
-            </calcite-notice>
-          </div>` : ""}
-        `;
+        if (detailBody) {
+          detailBody.innerHTML =
+            '<div class="detail-section">' +
+            '<h4 style="color:' + color + '">Company</h4>' +
+            '<div class="detail-field"><span class="label">Name</span><span class="value">' + attrs.name + '</span></div>' +
+            '<div class="detail-field"><span class="label">Company</span><span class="value" style="color:' + color + '">' + attrs.company + '</span></div>' +
+            '<div class="detail-field"><span class="label">Type</span><span class="value">' + attrs.typeLabel + '</span></div>' +
+            '<div class="detail-field"><span class="label">Category</span><span class="value">' + attrs.category + '</span></div>' +
+            '</div>' +
+            '<div class="detail-section">' +
+            '<h4>Location</h4>' +
+            '<div class="detail-field"><span class="label">Address</span><span class="value">' + attrs.fullAddress + '</span></div>' +
+            '<div class="detail-field"><span class="label">Phone</span><span class="value">' + (attrs.phone || "N/A") + '</span></div>' +
+            '<div class="detail-field"><span class="label">Website</span><span class="value"><a href="https://' + attrs.website + '" target="_blank" style="color:var(--calcite-color-brand)">' + attrs.website + '</a></span></div>' +
+            '</div>' +
+            '<div class="detail-section">' +
+            '<h4>Products & Intelligence</h4>' +
+            '<div class="detail-field"><span class="label">Products</span><span class="value">' + attrs.products + '</span></div>' +
+            '<div class="detail-field"><span class="label">Private Label</span><span class="value" style="color:' + (attrs.privateLabel === "Yes" ? "#e74c3c" : "#2ecc71") + '">' + attrs.privateLabel + '</span></div>' +
+            '<div class="detail-field"><span class="label">Threat Level</span><span class="value" style="color:' + threatColor + ';font-weight:700">' + threatLevel + '</span></div>' +
+            '</div>' +
+            (attrs.notes ? '<div class="detail-section"><h4>Intelligence Notes</h4><calcite-notice open kind="' + (attrs.privateLabel === "Yes" ? "danger" : "brand") + '" scale="s"><div slot="message">' + attrs.notes + '</div></calcite-notice></div>' : '');
+        }
       }
     });
   });
 
-  document.getElementById("btn-close-detail").addEventListener("click", () => {
-    detailPanel.setAttribute("collapsed", "");
+  var closeBtn = document.getElementById("btn-close-detail");
+  if (closeBtn) closeBtn.addEventListener("click", function() {
+    if (detailPanel) detailPanel.setAttribute("collapsed", "");
   });
 
 });
