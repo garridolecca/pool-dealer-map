@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>U.S. Pool & Hot Tub Dealer Map — King Technology Intelligence</title>
-
   <link rel="stylesheet" href="https://js.arcgis.com/4.31/esri/themes/dark/main.css" />
   <script src="https://js.arcgis.com/4.31/"></script>
   <script type="module" src="https://js.arcgis.com/calcite-components/2.13.2/calcite.esm.js"></script>
@@ -28,65 +27,60 @@
       </div>
     </calcite-navigation>
 
-    <!-- Mobile: bottom sheet toggle -->
-    <calcite-fab id="mobile-filter-toggle" class="mobile-only" icon="filter" text="Filters" text-enabled scale="l"></calcite-fab>
+    <!-- Mobile toggle -->
+    <calcite-fab id="mobile-panel-toggle" class="mobile-only" icon="graph-bar" text="Stats" text-enabled scale="l"></calcite-fab>
 
-    <!-- Left Panel -->
-    <calcite-shell-panel slot="panel-start" id="filter-panel" width-scale="s" position="start">
-      <calcite-action-bar slot="action-bar">
-        <calcite-action data-action-id="filters" icon="filter" text="Filters" active></calcite-action>
-        <calcite-action data-action-id="legend" icon="legend" text="Legend"></calcite-action>
-        <calcite-action data-action-id="stats" icon="graph-bar" text="Stats"></calcite-action>
-      </calcite-action-bar>
+    <!-- Left Panel: Statistics (clickable to filter) -->
+    <calcite-shell-panel slot="panel-start" id="stats-panel" width-scale="s" position="start">
 
-      <calcite-panel heading="Filters" data-panel-id="filters">
+      <calcite-panel heading="Dashboard">
+
+        <!-- Search -->
         <calcite-block heading="Search" open collapsible>
           <calcite-icon slot="icon" icon="search" scale="s"></calcite-icon>
           <calcite-input-text id="search-input" placeholder="Search name, city, state..." clearable icon="search" scale="s"></calcite-input-text>
         </calcite-block>
 
-        <calcite-block heading="Dealer Type" open collapsible>
-          <calcite-icon slot="icon" icon="organization" scale="s"></calcite-icon>
-          <div id="type-filters" class="filter-group"></div>
-        </calcite-block>
-
-        <calcite-block heading="Company / Brand" open collapsible>
-          <calcite-icon slot="icon" icon="label" scale="s"></calcite-icon>
-          <div id="company-filters" class="filter-group"></div>
-        </calcite-block>
-
-        <calcite-block heading="State" collapsible>
-          <calcite-icon slot="icon" icon="map" scale="s"></calcite-icon>
-          <calcite-combobox id="state-filter" placeholder="Filter by state" selection-mode="multiple" scale="s"></calcite-combobox>
-        </calcite-block>
-
-        <div class="filter-actions">
-          <calcite-button id="btn-clear-filters" kind="neutral" width="full" icon-start="reset" appearance="outline" scale="s">Clear All Filters</calcite-button>
+        <!-- Active Filters -->
+        <div id="active-filters" class="active-filters" style="display:none">
+          <div class="active-filters-header">
+            <span class="active-filters-label">Active Filters</span>
+            <calcite-button id="btn-clear-all" kind="danger" appearance="outline" scale="s" icon-start="reset">Clear All</calcite-button>
+          </div>
+          <div id="active-filter-chips" class="active-filter-chips"></div>
         </div>
-      </calcite-panel>
 
-      <calcite-panel heading="Legend" data-panel-id="legend" hidden>
-        <div id="legend-container" class="legend-grid"></div>
-      </calcite-panel>
-
-      <calcite-panel heading="Statistics" data-panel-id="stats" hidden>
+        <!-- By Dealer Type -->
         <calcite-block heading="By Dealer Type" open collapsible>
+          <calcite-icon slot="icon" icon="organization" scale="s"></calcite-icon>
           <div id="stats-type" class="stats-container"></div>
         </calcite-block>
+
+        <!-- By Company -->
         <calcite-block heading="By Company" open collapsible>
+          <calcite-icon slot="icon" icon="label" scale="s"></calcite-icon>
           <div id="stats-company" class="stats-container"></div>
         </calcite-block>
-        <calcite-block heading="Top States" open collapsible>
+
+        <!-- By State -->
+        <calcite-block heading="By State" open collapsible>
+          <calcite-icon slot="icon" icon="map" scale="s"></calcite-icon>
           <div id="stats-states" class="stats-container"></div>
         </calcite-block>
+
+        <!-- Summary -->
         <calcite-block heading="Coverage Summary" open collapsible>
+          <calcite-icon slot="icon" icon="graph-bar" scale="s"></calcite-icon>
           <div id="stats-summary" class="stats-container"></div>
         </calcite-block>
+
       </calcite-panel>
     </calcite-shell-panel>
 
+    <!-- Map -->
     <div id="viewDiv"></div>
 
+    <!-- Right Panel: Dealer Details (shown on click) -->
     <calcite-shell-panel slot="panel-end" width-scale="s" position="end" collapsed id="detail-panel">
       <calcite-panel heading="Dealer Details" id="detail-content">
         <calcite-action slot="header-actions-end" icon="x" text="Close" id="btn-close-detail"></calcite-action>

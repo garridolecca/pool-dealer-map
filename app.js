@@ -1,33 +1,38 @@
 require([
-  "esri/Map",
-  "esri/views/MapView",
-  "esri/layers/FeatureLayer",
-  "esri/Graphic",
-  "esri/geometry/Point",
-  "esri/widgets/Search",
-  "esri/widgets/Home",
-  "esri/widgets/BasemapToggle",
-  "esri/widgets/Expand",
+  "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
+  "esri/Graphic", "esri/geometry/Point",
+  "esri/widgets/Search", "esri/widgets/Home", "esri/widgets/BasemapToggle", "esri/widgets/Expand",
 ], function (Map, MapView, FeatureLayer, Graphic, Point, Search, Home, BasemapToggle, Expand) {
 
-  // ── State ────────────────────────────────────────
-  var clusterEnabled = false; // OFF by default
+  // ═══════════════════════════════════════════════════
+  // STATE
+  // ═══════════════════════════════════════════════════
+  var clusterEnabled = false;
   var heatmapEnabled = false;
   var isMobile = window.innerWidth <= 640;
 
-  // ── Map ──────────────────────────────────────────
+  // Active filters — each category allows one selection at a time (click to toggle)
+  var activeFilters = {
+    type: null,     // e.g. "wholesale"
+    company: null,  // e.g. "PoolCorp"
+    state: null,    // e.g. "FL"
+  };
+
+  // ═══════════════════════════════════════════════════
+  // MAP
+  // ═══════════════════════════════════════════════════
   var map = new Map({ basemap: "dark-gray-vector" });
   var view = new MapView({
-    container: "viewDiv",
-    map: map,
-    center: [-98.5, 39.5],
-    zoom: isMobile ? 3 : 4,
-    popup: { dockEnabled: true, dockOptions: { position: "bottom-center", breakpoint: { width: 640 } } },
+    container: "viewDiv", map: map,
+    center: [-98.5, 39.5], zoom: isMobile ? 3 : 4,
+    popup: { autoOpenEnabled: false }, // DISABLED — use right panel instead
     ui: { components: ["attribution"] },
     constraints: { minZoom: 3 },
   });
 
-  // ── Graphics ─────────────────────────────────────
+  // ═══════════════════════════════════════════════════
+  // GRAPHICS
+  // ═══════════════════════════════════════════════════
   console.log("Building", DEALER_DATABASE.length, "graphics...");
   var graphics = [];
   for (var i = 0; i < DEALER_DATABASE.length; i++) {
@@ -36,20 +41,12 @@ require([
     graphics.push(new Graphic({
       geometry: new Point({ longitude: d.lng, latitude: d.lat }),
       attributes: {
-        ObjectID: i + 1,
-        name: d.name || "",
-        company: d.company || "",
-        type: d.type || "",
-        typeLabel: (TYPE_LABELS[d.type]) || d.type || "",
-        category: d.category || "",
-        address: d.address || "",
-        city: d.city || "",
-        state: d.state || "",
-        zip: d.zip || "",
-        phone: d.phone || "",
-        website: d.website || "",
-        products: d.products || "",
-        privateLabel: d.privateLabel ? "Yes" : "No",
+        ObjectID: i + 1, name: d.name || "", company: d.company || "",
+        type: d.type || "", typeLabel: (TYPE_LABELS[d.type]) || d.type || "",
+        category: d.category || "", address: d.address || "",
+        city: d.city || "", state: d.state || "", zip: d.zip || "",
+        phone: d.phone || "", website: d.website || "",
+        products: d.products || "", privateLabel: d.privateLabel ? "Yes" : "No",
         notes: d.notes || "",
         fullAddress: (d.address || "") + ", " + (d.city || "") + ", " + (d.state || "") + " " + (d.zip || ""),
       },
@@ -57,72 +54,50 @@ require([
   }
   console.log("Created", graphics.length, "graphics");
 
-  // ── Renderer ─────────────────────────────────────
+  // ═══════════════════════════════════════════════════
+  // RENDERER
+  // ═══════════════════════════════════════════════════
   var uniqueInfos = [];
-  var companies = Object.keys(COMPANY_COLORS);
-  for (var c = 0; c < companies.length; c++) {
-    var co = companies[c];
+  Object.keys(COMPANY_COLORS).forEach(function(co) {
     uniqueInfos.push({
       value: co,
       symbol: {
-        type: "simple-marker",
-        color: COMPANY_COLORS[co],
+        type: "simple-marker", color: COMPANY_COLORS[co],
         size: co === "King Technology" ? 14 : 6,
         outline: { color: co === "King Technology" ? "#fff" : [255,255,255,0.3], width: co === "King Technology" ? 2 : 0.5 },
         style: co === "King Technology" ? "diamond" : "circle",
-      },
-      label: co,
+      }, label: co,
     });
-  }
+  });
   var companyRenderer = {
     type: "unique-value", field: "company",
     defaultSymbol: { type: "simple-marker", color: "#888", size: 5, outline: { color: [255,255,255,0.2], width: 0.5 } },
     defaultLabel: "Other", uniqueValueInfos: uniqueInfos,
   };
 
-  // ── Popup ────────────────────────────────────────
-  var popupTpl = {
-    title: "{name}",
-    content: [{ type: "fields", fieldInfos: [
-      { fieldName: "company", label: "Company" },
-      { fieldName: "typeLabel", label: "Type" },
-      { fieldName: "fullAddress", label: "Address" },
-      { fieldName: "phone", label: "Phone" },
-      { fieldName: "website", label: "Website" },
-      { fieldName: "products", label: "Products" },
-      { fieldName: "privateLabel", label: "Private Label" },
-      { fieldName: "notes", label: "Notes" },
-    ]}],
-  };
-
-  // ── Cluster config (off by default) ──────────────
   var clusterConfig = {
-    type: "cluster", clusterRadius: "80px",
-    clusterMinSize: "22px", clusterMaxSize: "56px",
+    type: "cluster", clusterRadius: "80px", clusterMinSize: "22px", clusterMaxSize: "56px",
     popupTemplate: { title: "{cluster_count} dealers", content: "Zoom in to see individual dealers." },
     labelingInfo: [{ deconflictionStrategy: "none",
       labelExpressionInfo: { expression: "Text($feature.cluster_count, '#,###')" },
       symbol: { type: "text", color: "#fff", font: { weight: "bold", family: "Noto Sans", size: "11px" } },
-      labelPlacement: "center-center",
-    }],
+      labelPlacement: "center-center" }],
   };
 
-  // ── Heatmap renderer ─────────────────────────────
   var heatmapRenderer = {
     type: "heatmap",
     colorStops: [
-      { color: "rgba(0,0,0,0)", ratio: 0 },
-      { color: "rgba(0,100,255,0.4)", ratio: 0.1 },
-      { color: "rgba(0,200,200,0.6)", ratio: 0.25 },
-      { color: "rgba(100,255,100,0.7)", ratio: 0.45 },
-      { color: "rgba(255,255,0,0.85)", ratio: 0.65 },
-      { color: "rgba(255,100,0,0.9)", ratio: 0.8 },
+      { color: "rgba(0,0,0,0)", ratio: 0 }, { color: "rgba(0,100,255,0.4)", ratio: 0.1 },
+      { color: "rgba(0,200,200,0.6)", ratio: 0.25 }, { color: "rgba(100,255,100,0.7)", ratio: 0.45 },
+      { color: "rgba(255,255,0,0.85)", ratio: 0.65 }, { color: "rgba(255,100,0,0.9)", ratio: 0.8 },
       { color: "rgba(255,0,0,1)", ratio: 1 },
     ],
     minDensity: 0, maxDensity: 0.008, radius: 16,
   };
 
-  // ── Feature Layer — NO clustering by default ─────
+  // ═══════════════════════════════════════════════════
+  // LAYER — no clustering, no popup
+  // ═══════════════════════════════════════════════════
   var dealerLayer = new FeatureLayer({
     source: graphics,
     fields: [
@@ -136,315 +111,40 @@ require([
       { name: "privateLabel", type: "string" }, { name: "notes", type: "string" },
       { name: "fullAddress", type: "string" },
     ],
-    objectIdField: "ObjectID",
-    geometryType: "point",
+    objectIdField: "ObjectID", geometryType: "point",
     spatialReference: { wkid: 4326 },
-    renderer: companyRenderer,
-    popupTemplate: popupTpl,
-    title: "Pool & Hot Tub Dealers",
-    featureReduction: null, // NO CLUSTERING by default
-    outFields: ["*"],
+    renderer: companyRenderer, popupEnabled: false,
+    title: "Dealers", featureReduction: null, outFields: ["*"],
   });
   map.add(dealerLayer);
-  console.log("Layer added — no clustering by default");
 
-  // ── Widgets ──────────────────────────────────────
+  // ═══════════════════════════════════════════════════
+  // WIDGETS
+  // ═══════════════════════════════════════════════════
   view.when(function() {
     console.log("View ready");
     view.ui.add(new Home({ view: view }), "top-left");
     view.ui.add(new BasemapToggle({ view: view, nextBasemap: "satellite" }), "bottom-right");
-
-    var searchWidget = new Search({
+    var sw = new Search({
       view: view, includeDefaultSources: false,
       sources: [{ layer: dealerLayer, searchFields: ["name","company","city","state"],
         displayField: "name", exactMatch: false, outFields: ["*"],
         name: "Dealers", placeholder: "Search dealers..." }],
     });
-    view.ui.add(new Expand({ view: view, content: searchWidget, expandIcon: "search" }), "top-right");
+    view.ui.add(new Expand({ view: view, content: sw, expandIcon: "search" }), "top-right");
 
-    buildFilterUI();
-    buildLegend();
+    renderAllStats();
     updateDealerCount();
-    updateStats();
 
-    // Mobile panel toggle
     if (isMobile) {
-      var panel = document.getElementById("filter-panel");
+      var panel = document.getElementById("stats-panel");
       if (panel) panel.classList.add("mobile-hidden");
     }
   });
 
-  // ════════════════════════════════════════════════
-  // FILTERS — all work in real-time sync with the map
-  // ════════════════════════════════════════════════
-
-  function applyFilters() {
-    var searchText = (document.getElementById("search-input").value || "").toLowerCase().trim();
-
-    // Gather checked types
-    var allTypeCheckboxes = document.querySelectorAll(".type-checkbox");
-    var checkedTypes = [];
-    allTypeCheckboxes.forEach(function(cb) {
-      if (cb.hasAttribute("checked")) checkedTypes.push(cb.getAttribute("value"));
-    });
-
-    // Gather checked companies
-    var allCompanyCheckboxes = document.querySelectorAll(".company-checkbox");
-    var checkedCompanies = [];
-    allCompanyCheckboxes.forEach(function(cb) {
-      if (cb.hasAttribute("checked")) checkedCompanies.push(cb.getAttribute("value"));
-    });
-
-    // Gather selected states
-    var stateCombo = document.getElementById("state-filter");
-    var selectedStates = [];
-    if (stateCombo && stateCombo.selectedItems) {
-      Array.from(stateCombo.selectedItems).forEach(function(item) {
-        selectedStates.push(item.getAttribute("value"));
-      });
-    }
-
-    // Build SQL where clause for the layer
-    var clauses = [];
-    var totalTypes = Object.keys(TYPE_LABELS).length;
-    if (checkedTypes.length > 0 && checkedTypes.length < totalTypes) {
-      clauses.push("type IN ('" + checkedTypes.join("','") + "')");
-    } else if (checkedTypes.length === 0) {
-      clauses.push("1=0"); // nothing checked = show nothing
-    }
-
-    var totalCompanies = Object.keys(COMPANY_COLORS).length;
-    if (checkedCompanies.length > 0 && checkedCompanies.length < totalCompanies) {
-      clauses.push("company IN ('" + checkedCompanies.join("','") + "')");
-    } else if (checkedCompanies.length === 0) {
-      clauses.push("1=0");
-    }
-
-    if (selectedStates.length > 0) {
-      clauses.push("state IN ('" + selectedStates.join("','") + "')");
-    }
-
-    if (searchText) {
-      var esc = searchText.replace(/'/g, "''");
-      clauses.push("(LOWER(name) LIKE '%" + esc + "%' OR LOWER(company) LIKE '%" + esc + "%' OR LOWER(city) LIKE '%" + esc + "%' OR LOWER(state) LIKE '%" + esc + "%')");
-    }
-
-    // Apply to layer
-    dealerLayer.definitionExpression = clauses.length > 0 ? clauses.join(" AND ") : "1=1";
-
-    // Also filter local data for stats
-    var filtered = DEALER_DATABASE.filter(function(d) {
-      if (checkedTypes.length === 0) return false;
-      if (checkedTypes.length < totalTypes && checkedTypes.indexOf(d.type) < 0) return false;
-      if (checkedCompanies.length === 0) return false;
-      if (checkedCompanies.length < totalCompanies && checkedCompanies.indexOf(d.company) < 0) return false;
-      if (selectedStates.length > 0 && selectedStates.indexOf(d.state) < 0) return false;
-      if (searchText) {
-        if ((d.name||"").toLowerCase().indexOf(searchText) < 0 &&
-            (d.company||"").toLowerCase().indexOf(searchText) < 0 &&
-            (d.city||"").toLowerCase().indexOf(searchText) < 0 &&
-            (d.state||"").toLowerCase().indexOf(searchText) < 0) return false;
-      }
-      return true;
-    });
-
-    updateDealerCount(filtered.length);
-    updateStats(filtered);
-  }
-
-  // ── Build filter UI ──────────────────────────────
-  function buildFilterUI() {
-    // Types
-    var typeContainer = document.getElementById("type-filters");
-    var typeSet = {};
-    DEALER_DATABASE.forEach(function(d) { typeSet[d.type] = true; });
-    Object.keys(typeSet).forEach(function(t) {
-      var lbl = document.createElement("label");
-      var cb = document.createElement("calcite-checkbox");
-      cb.setAttribute("checked", ""); cb.setAttribute("value", t); cb.setAttribute("scale", "s");
-      cb.classList.add("type-checkbox");
-      // Real-time filter on change
-      cb.addEventListener("calciteCheckboxChange", function() { applyFilters(); });
-      var dot = document.createElement("span");
-      dot.className = "color-dot";
-      dot.style.backgroundColor = TYPE_COLORS[t] || "#888";
-      lbl.appendChild(cb); lbl.appendChild(dot);
-      lbl.appendChild(document.createTextNode(" " + (TYPE_LABELS[t] || t)));
-      typeContainer.appendChild(lbl);
-    });
-
-    // Companies
-    var compContainer = document.getElementById("company-filters");
-    var compSet = {};
-    DEALER_DATABASE.forEach(function(d) { compSet[d.company] = true; });
-    var compList = Object.keys(compSet).sort();
-    compList.forEach(function(c) {
-      var lbl = document.createElement("label");
-      var cb = document.createElement("calcite-checkbox");
-      cb.setAttribute("checked", ""); cb.setAttribute("value", c); cb.setAttribute("scale", "s");
-      cb.classList.add("company-checkbox");
-      cb.addEventListener("calciteCheckboxChange", function() { applyFilters(); });
-      var dot = document.createElement("span");
-      dot.className = "color-dot";
-      dot.style.backgroundColor = COMPANY_COLORS[c] || "#888";
-      lbl.appendChild(cb); lbl.appendChild(dot);
-      lbl.appendChild(document.createTextNode(" " + c));
-      compContainer.appendChild(lbl);
-    });
-
-    // States
-    var stateCombo = document.getElementById("state-filter");
-    var stateSet = {};
-    DEALER_DATABASE.forEach(function(d) { if (d.state) stateSet[d.state] = true; });
-    Object.keys(stateSet).sort().forEach(function(s) {
-      var item = document.createElement("calcite-combobox-item");
-      item.setAttribute("value", s); item.setAttribute("text-label", s);
-      stateCombo.appendChild(item);
-    });
-    stateCombo.addEventListener("calciteComboboxChange", function() { applyFilters(); });
-
-    // Search — real-time
-    var searchInput = document.getElementById("search-input");
-    searchInput.addEventListener("calciteInputTextInput", function() { applyFilters(); });
-    searchInput.addEventListener("calciteInputTextChange", function() { applyFilters(); });
-
-    // Clear all
-    document.getElementById("btn-clear-filters").addEventListener("click", function() {
-      document.querySelectorAll(".type-checkbox, .company-checkbox").forEach(function(cb) { cb.setAttribute("checked", ""); });
-      searchInput.value = "";
-      // Clear combobox
-      if (stateCombo.selectedItems) {
-        Array.from(stateCombo.selectedItems).forEach(function(i) { i.removeAttribute("selected"); });
-      }
-      dealerLayer.definitionExpression = "1=1";
-      updateDealerCount(); updateStats();
-    });
-  }
-
-  // ── Dealer count ─────────────────────────────────
-  function updateDealerCount(count) {
-    var chip = document.getElementById("dealer-count-chip");
-    if (chip) chip.textContent = (count !== undefined ? count : graphics.length).toLocaleString() + " Dealers";
-  }
-
-  // ── Legend ────────────────────────────────────────
-  function buildLegend() {
-    var container = document.getElementById("legend-container");
-    if (!container) return;
-
-    var sec1 = document.createElement("div"); sec1.className = "legend-section";
-    sec1.innerHTML = "<h4>By Company</h4>";
-    Object.keys(COMPANY_COLORS).forEach(function(name) {
-      var item = document.createElement("div"); item.className = "legend-item";
-      var sym = document.createElement("div"); sym.className = "legend-symbol";
-      sym.style.backgroundColor = COMPANY_COLORS[name];
-      if (name === "King Technology") {
-        sym.style.borderColor = "#fff"; sym.style.borderWidth = "2px";
-        sym.style.borderRadius = "0"; sym.style.transform = "rotate(45deg)";
-      }
-      item.appendChild(sym); item.appendChild(document.createTextNode(name));
-      sec1.appendChild(item);
-    });
-    container.appendChild(sec1);
-
-    var sec2 = document.createElement("div"); sec2.className = "legend-section";
-    sec2.innerHTML = "<h4>By Dealer Type</h4>";
-    Object.keys(TYPE_COLORS).forEach(function(t) {
-      var item = document.createElement("div"); item.className = "legend-item";
-      var sym = document.createElement("div"); sym.className = "legend-symbol square";
-      sym.style.backgroundColor = TYPE_COLORS[t];
-      item.appendChild(sym); item.appendChild(document.createTextNode(TYPE_LABELS[t] || t));
-      sec2.appendChild(item);
-    });
-    container.appendChild(sec2);
-  }
-
-  // ── Stats ────────────────────────────────────────
-  function updateStats(data) {
-    data = data || DEALER_DATABASE;
-    var total = data.length;
-
-    function renderBars(containerId, counts, colorMap) {
-      var el = document.getElementById(containerId);
-      if (!el) return;
-      el.innerHTML = "";
-      var sorted = Object.entries(counts).sort(function(a,b) { return b[1]-a[1]; });
-      var max = sorted.length > 0 ? sorted[0][1] : 1;
-      sorted.forEach(function(entry) {
-        var k = entry[0], v = entry[1];
-        var color = colorMap ? (colorMap[k] || "#0079c1") : "#0079c1";
-        el.innerHTML += '<div class="stat-row"><span class="stat-label"><span class="color-dot" style="background:'+color+'"></span> '+ k +'</span><div class="stat-bar-container"><div class="stat-bar" style="width:'+(v/max*100)+'%;background:'+color+'"></div></div><span class="stat-value">'+v+'</span></div>';
-      });
-    }
-
-    var typeCounts = {}; data.forEach(function(d) { typeCounts[TYPE_LABELS[d.type]||d.type] = (typeCounts[TYPE_LABELS[d.type]||d.type]||0)+1; });
-    renderBars("stats-type", typeCounts, null);
-
-    var compCounts = {}; data.forEach(function(d) { compCounts[d.company] = (compCounts[d.company]||0)+1; });
-    renderBars("stats-company", compCounts, COMPANY_COLORS);
-
-    var stateCounts = {}; data.forEach(function(d) { if(d.state) stateCounts[d.state] = (stateCounts[d.state]||0)+1; });
-    var topStates = {}; Object.entries(stateCounts).sort(function(a,b){return b[1]-a[1];}).slice(0,15).forEach(function(e){topStates[e[0]]=e[1];});
-    renderBars("stats-states", topStates, null);
-
-    var sum = document.getElementById("stats-summary");
-    if (sum) {
-      var pl = data.filter(function(d){return d.privateLabel;}).length;
-      var ht = data.filter(function(d){return d.category==="hot-tub";}).length;
-      var ch = data.filter(function(d){return d.products&&d.products.toLowerCase().indexOf("chemical")>=0;}).length;
-      sum.innerHTML =
-        '<div class="stat-row"><span class="stat-label">Total Dealers</span><span class="stat-value">'+total.toLocaleString()+'</span></div>'+
-        '<div class="stat-row"><span class="stat-label">States</span><span class="stat-value">'+Object.keys(stateCounts).length+'</span></div>'+
-        '<div class="stat-row"><span class="stat-label">Sell Chemicals</span><span class="stat-value">'+ch.toLocaleString()+'</span></div>'+
-        '<div class="stat-row"><span class="stat-label">Hot Tub Dealers</span><span class="stat-value">'+ht.toLocaleString()+'</span></div>'+
-        '<div class="stat-row"><span class="stat-label">Private Label</span><span class="stat-value">'+pl.toLocaleString()+'</span></div>'+
-        '<div class="stat-row"><span class="stat-label">Companies</span><span class="stat-value">'+Object.keys(compCounts).length+'</span></div>';
-    }
-  }
-
-  // ── Header buttons ───────────────────────────────
-  document.getElementById("btn-zoom-all").addEventListener("click", function() {
-    view.goTo({ center: [-98.5, 39.5], zoom: isMobile ? 3 : 4 });
-  });
-
-  document.getElementById("btn-toggle-cluster").addEventListener("click", function() {
-    if (heatmapEnabled) return;
-    clusterEnabled = !clusterEnabled;
-    dealerLayer.featureReduction = clusterEnabled ? clusterConfig : null;
-    this.setAttribute("active", clusterEnabled ? "" : null);
-    if (!clusterEnabled) this.removeAttribute("active");
-  });
-
-  document.getElementById("btn-toggle-heat").addEventListener("click", function() {
-    heatmapEnabled = !heatmapEnabled;
-    if (heatmapEnabled) {
-      dealerLayer.renderer = heatmapRenderer;
-      dealerLayer.featureReduction = null;
-      clusterEnabled = false;
-      document.getElementById("btn-toggle-cluster").removeAttribute("active");
-    } else {
-      dealerLayer.renderer = companyRenderer;
-      if (clusterEnabled) dealerLayer.featureReduction = clusterConfig;
-    }
-  });
-
-  // ── Action bar panel switching ───────────────────
-  var actionBar = document.querySelector("calcite-action-bar");
-  var panels = document.querySelectorAll("#filter-panel calcite-panel");
-  if (actionBar) {
-    actionBar.addEventListener("click", function(e) {
-      var action = e.target.closest("calcite-action");
-      if (!action || !action.getAttribute("data-action-id")) return;
-      var id = action.getAttribute("data-action-id");
-      actionBar.querySelectorAll("calcite-action").forEach(function(a) { a.removeAttribute("active"); });
-      action.setAttribute("active", "");
-      panels.forEach(function(p) {
-        p.getAttribute("data-panel-id") === id ? p.removeAttribute("hidden") : p.setAttribute("hidden", "");
-      });
-    });
-  }
-
-  // ── Detail panel ─────────────────────────────────
+  // ═══════════════════════════════════════════════════
+  // CLICK MAP → SHOW RIGHT PANEL (no popup)
+  // ═══════════════════════════════════════════════════
   view.on("click", function(event) {
     view.hitTest(event).then(function(response) {
       var r = response.results.find(function(x) { return x.graphic && x.graphic.layer === dealerLayer; });
@@ -476,11 +176,229 @@ require([
     document.getElementById("detail-panel").setAttribute("collapsed", "");
   });
 
-  // ── Mobile filter toggle ─────────────────────────
-  var mobileToggle = document.getElementById("mobile-filter-toggle");
+  // ═══════════════════════════════════════════════════
+  // FILTERING ENGINE
+  // ═══════════════════════════════════════════════════
+  function applyFilters() {
+    var searchText = (document.getElementById("search-input").value || "").toLowerCase().trim();
+    var clauses = [];
+
+    if (activeFilters.type) clauses.push("type = '" + activeFilters.type + "'");
+    if (activeFilters.company) clauses.push("company = '" + activeFilters.company.replace(/'/g,"''") + "'");
+    if (activeFilters.state) clauses.push("state = '" + activeFilters.state + "'");
+    if (searchText) {
+      var esc = searchText.replace(/'/g, "''");
+      clauses.push("(LOWER(name) LIKE '%" + esc + "%' OR LOWER(company) LIKE '%" + esc + "%' OR LOWER(city) LIKE '%" + esc + "%' OR LOWER(state) LIKE '%" + esc + "%')");
+    }
+
+    dealerLayer.definitionExpression = clauses.length > 0 ? clauses.join(" AND ") : "1=1";
+
+    // Update count
+    var filtered = getFilteredData(searchText);
+    updateDealerCount(filtered.length);
+    renderAllStats(filtered);
+    renderActiveFilters();
+  }
+
+  function getFilteredData(searchText) {
+    if (searchText === undefined) searchText = (document.getElementById("search-input").value || "").toLowerCase().trim();
+    return DEALER_DATABASE.filter(function(d) {
+      if (activeFilters.type && d.type !== activeFilters.type) return false;
+      if (activeFilters.company && d.company !== activeFilters.company) return false;
+      if (activeFilters.state && d.state !== activeFilters.state) return false;
+      if (searchText) {
+        if ((d.name||"").toLowerCase().indexOf(searchText) < 0 &&
+            (d.company||"").toLowerCase().indexOf(searchText) < 0 &&
+            (d.city||"").toLowerCase().indexOf(searchText) < 0 &&
+            (d.state||"").toLowerCase().indexOf(searchText) < 0) return false;
+      }
+      return true;
+    });
+  }
+
+  // Toggle a filter — click once to activate, click again to deactivate
+  function toggleFilter(category, value) {
+    if (activeFilters[category] === value) {
+      activeFilters[category] = null; // deactivate
+    } else {
+      activeFilters[category] = value; // activate
+    }
+    applyFilters();
+  }
+
+  // ═══════════════════════════════════════════════════
+  // ACTIVE FILTER CHIPS
+  // ═══════════════════════════════════════════════════
+  function renderActiveFilters() {
+    var container = document.getElementById("active-filters");
+    var chips = document.getElementById("active-filter-chips");
+    var hasAny = activeFilters.type || activeFilters.company || activeFilters.state;
+
+    container.style.display = hasAny ? "block" : "none";
+    chips.innerHTML = "";
+
+    if (activeFilters.type) {
+      var chip = document.createElement("calcite-chip");
+      chip.setAttribute("scale", "s"); chip.setAttribute("kind", "brand"); chip.setAttribute("closable", "");
+      chip.textContent = "Type: " + (TYPE_LABELS[activeFilters.type] || activeFilters.type);
+      chip.addEventListener("calciteChipClose", function() { activeFilters.type = null; applyFilters(); });
+      chips.appendChild(chip);
+    }
+    if (activeFilters.company) {
+      var chip2 = document.createElement("calcite-chip");
+      chip2.setAttribute("scale", "s"); chip2.setAttribute("kind", "brand"); chip2.setAttribute("closable", "");
+      chip2.textContent = "Company: " + activeFilters.company;
+      chip2.addEventListener("calciteChipClose", function() { activeFilters.company = null; applyFilters(); });
+      chips.appendChild(chip2);
+    }
+    if (activeFilters.state) {
+      var chip3 = document.createElement("calcite-chip");
+      chip3.setAttribute("scale", "s"); chip3.setAttribute("kind", "brand"); chip3.setAttribute("closable", "");
+      chip3.textContent = "State: " + activeFilters.state;
+      chip3.addEventListener("calciteChipClose", function() { activeFilters.state = null; applyFilters(); });
+      chips.appendChild(chip3);
+    }
+  }
+
+  document.getElementById("btn-clear-all").addEventListener("click", function() {
+    activeFilters.type = null; activeFilters.company = null; activeFilters.state = null;
+    document.getElementById("search-input").value = "";
+    applyFilters();
+  });
+
+  // ═══════════════════════════════════════════════════
+  // RENDER STATS — clickable rows that act as filters
+  // ═══════════════════════════════════════════════════
+  function renderAllStats(data) {
+    data = data || DEALER_DATABASE;
+    var total = data.length;
+
+    // ── By Dealer Type ──
+    var typeCounts = {};
+    data.forEach(function(d) { typeCounts[d.type] = (typeCounts[d.type] || 0) + 1; });
+    var typeEl = document.getElementById("stats-type");
+    typeEl.innerHTML = "";
+    var typeSorted = Object.entries(typeCounts).sort(function(a,b){return b[1]-a[1];});
+    var typeMax = typeSorted.length > 0 ? typeSorted[0][1] : 1;
+    typeSorted.forEach(function(entry) {
+      var type = entry[0], count = entry[1];
+      var color = TYPE_COLORS[type] || "#0079c1";
+      var label = TYPE_LABELS[type] || type;
+      var isActive = activeFilters.type === type;
+      var row = document.createElement("div");
+      row.className = "stat-row" + (isActive ? " active" : "");
+      row.innerHTML =
+        '<span class="stat-label"><span class="color-dot" style="background:'+color+'"></span> '+label+'</span>'+
+        '<div class="stat-bar-container"><div class="stat-bar" style="width:'+(count/typeMax*100)+'%;background:'+color+'"></div></div>'+
+        '<span class="stat-value">'+count.toLocaleString()+'</span>';
+      row.addEventListener("click", function() { toggleFilter("type", type); });
+      typeEl.appendChild(row);
+    });
+
+    // ── By Company ──
+    var compCounts = {};
+    data.forEach(function(d) { compCounts[d.company] = (compCounts[d.company] || 0) + 1; });
+    var compEl = document.getElementById("stats-company");
+    compEl.innerHTML = "";
+    var compSorted = Object.entries(compCounts).sort(function(a,b){return b[1]-a[1];});
+    var compMax = compSorted.length > 0 ? compSorted[0][1] : 1;
+    compSorted.forEach(function(entry) {
+      var company = entry[0], count = entry[1];
+      var color = COMPANY_COLORS[company] || "#0079c1";
+      var isActive = activeFilters.company === company;
+      var row = document.createElement("div");
+      row.className = "stat-row" + (isActive ? " active" : "");
+      row.innerHTML =
+        '<span class="stat-label"><span class="color-dot" style="background:'+color+'"></span> '+company+'</span>'+
+        '<div class="stat-bar-container"><div class="stat-bar" style="width:'+(count/compMax*100)+'%;background:'+color+'"></div></div>'+
+        '<span class="stat-value">'+count.toLocaleString()+'</span>';
+      row.addEventListener("click", function() { toggleFilter("company", company); });
+      compEl.appendChild(row);
+    });
+
+    // ── By State ──
+    var stateCounts = {};
+    data.forEach(function(d) { if (d.state) stateCounts[d.state] = (stateCounts[d.state] || 0) + 1; });
+    var stateEl = document.getElementById("stats-states");
+    stateEl.innerHTML = "";
+    var stateSorted = Object.entries(stateCounts).sort(function(a,b){return b[1]-a[1];});
+    var stateMax = stateSorted.length > 0 ? stateSorted[0][1] : 1;
+    stateSorted.forEach(function(entry) {
+      var state = entry[0], count = entry[1];
+      var isActive = activeFilters.state === state;
+      var row = document.createElement("div");
+      row.className = "stat-row" + (isActive ? " active" : "");
+      row.innerHTML =
+        '<span class="stat-label">'+state+'</span>'+
+        '<div class="stat-bar-container"><div class="stat-bar" style="width:'+(count/stateMax*100)+'%"></div></div>'+
+        '<span class="stat-value">'+count.toLocaleString()+'</span>';
+      row.addEventListener("click", function() { toggleFilter("state", state); });
+      stateEl.appendChild(row);
+    });
+
+    // ── Summary ──
+    var sumEl = document.getElementById("stats-summary");
+    if (sumEl) {
+      var pl = data.filter(function(d){return d.privateLabel;}).length;
+      var ht = data.filter(function(d){return d.category==="hot-tub";}).length;
+      var ch = data.filter(function(d){return d.products&&d.products.toLowerCase().indexOf("chemical")>=0;}).length;
+      sumEl.innerHTML =
+        '<div class="stat-row" style="cursor:default"><span class="stat-label">Total Dealers</span><span class="stat-value">'+total.toLocaleString()+'</span></div>'+
+        '<div class="stat-row" style="cursor:default"><span class="stat-label">States</span><span class="stat-value">'+Object.keys(stateCounts).length+'</span></div>'+
+        '<div class="stat-row" style="cursor:default"><span class="stat-label">Sell Chemicals</span><span class="stat-value">'+ch.toLocaleString()+'</span></div>'+
+        '<div class="stat-row" style="cursor:default"><span class="stat-label">Hot Tub Dealers</span><span class="stat-value">'+ht.toLocaleString()+'</span></div>'+
+        '<div class="stat-row" style="cursor:default"><span class="stat-label">Private Label</span><span class="stat-value">'+pl.toLocaleString()+'</span></div>'+
+        '<div class="stat-row" style="cursor:default"><span class="stat-label">Companies</span><span class="stat-value">'+Object.keys(compCounts).length+'</span></div>';
+    }
+  }
+
+  // ═══════════════════════════════════════════════════
+  // DEALER COUNT
+  // ═══════════════════════════════════════════════════
+  function updateDealerCount(count) {
+    var chip = document.getElementById("dealer-count-chip");
+    if (chip) chip.textContent = (count !== undefined ? count : graphics.length).toLocaleString() + " Dealers";
+  }
+
+  // ═══════════════════════════════════════════════════
+  // SEARCH — real-time
+  // ═══════════════════════════════════════════════════
+  var searchInput = document.getElementById("search-input");
+  searchInput.addEventListener("calciteInputTextInput", function() { applyFilters(); });
+  searchInput.addEventListener("calciteInputTextChange", function() { applyFilters(); });
+
+  // ═══════════════════════════════════════════════════
+  // HEADER BUTTONS
+  // ═══════════════════════════════════════════════════
+  document.getElementById("btn-zoom-all").addEventListener("click", function() {
+    view.goTo({ center: [-98.5, 39.5], zoom: isMobile ? 3 : 4 });
+  });
+
+  document.getElementById("btn-toggle-cluster").addEventListener("click", function() {
+    if (heatmapEnabled) return;
+    clusterEnabled = !clusterEnabled;
+    dealerLayer.featureReduction = clusterEnabled ? clusterConfig : null;
+    if (clusterEnabled) this.setAttribute("active",""); else this.removeAttribute("active");
+  });
+
+  document.getElementById("btn-toggle-heat").addEventListener("click", function() {
+    heatmapEnabled = !heatmapEnabled;
+    if (heatmapEnabled) {
+      dealerLayer.renderer = heatmapRenderer; dealerLayer.featureReduction = null;
+      clusterEnabled = false; document.getElementById("btn-toggle-cluster").removeAttribute("active");
+    } else {
+      dealerLayer.renderer = companyRenderer;
+      if (clusterEnabled) dealerLayer.featureReduction = clusterConfig;
+    }
+  });
+
+  // ═══════════════════════════════════════════════════
+  // MOBILE
+  // ═══════════════════════════════════════════════════
+  var mobileToggle = document.getElementById("mobile-panel-toggle");
   if (mobileToggle) {
     mobileToggle.addEventListener("click", function() {
-      var panel = document.getElementById("filter-panel");
+      var panel = document.getElementById("stats-panel");
       if (panel) panel.classList.toggle("mobile-hidden");
     });
   }
