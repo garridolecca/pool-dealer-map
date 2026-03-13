@@ -1,0 +1,568 @@
+POOL & HOT TUB CHEMICAL DEALERS - COMPREHENSIVE US DATASET
+============================================================
+Compiled: March 13, 2026
+Purpose: Data for mapping pool/hot tub chemical dealer locations across the US
+
+
+================================================================================
+1. LESLIE'S POOL SUPPLIES
+================================================================================
+Type: Retail Chain (largest specialty pool retailer in US)
+Total US Locations: 972 (as of Oct 15, 2025)
+States: 37 states
+HQ: Phoenix, AZ
+Website: https://lesliespool.com
+Ticker: LESL (public)
+Products: Chemicals, equipment, accessories, service & repair
+Private Label: YES - Leslie's brand chemicals (significant portion of sales)
+  - Leslie's 3-in-1 Jumbo Chlorine Tabs
+  - Leslie's Power Powder (calcium hypochlorite shock)
+  - Leslie's Fresh 'N Clear (chlorine-free shock)
+  - Leslie's Perfect Weekly (phosphate remover + enzymes)
+  - Leslie's Ultra Bright Advanced (clarifier)
+  - Leslie's branded spa/hot tub chemicals
+
+STATE-BY-STATE BREAKDOWN (Top 10 confirmed, rest estimated):
+  Texas:          224 locations (23%)
+  California:     172 locations (18%)
+  Arizona:         98 locations (10%)
+  Florida:         92 locations (9.5%)
+  New York:        36 locations
+  Georgia:         34 locations
+  New Jersey:      33 locations
+  Nevada:          28 locations
+  Pennsylvania:    27 locations
+  Oklahoma:        22 locations
+  [Remaining 26 states/territories: ~206 locations combined]
+
+STATES WITH NO LOCATIONS (20):
+  Colorado, Washington, Oregon, Idaho, Montana, Wyoming,
+  South Dakota, North Dakota, Minnesota, Vermont, Maine,
+  West Virginia, Hawaii, Alaska, DC,
+  Puerto Rico, Guam, USVI, American Samoa, N. Mariana Islands
+
+Acquired companies: Pool Supply World, In The Swim
+
+
+================================================================================
+2. PINCH A PENNY POOL PATIO SPA
+================================================================================
+Type: Franchise Retail Chain
+Total US Locations: 291-300+ (291 as of Dec 31, 2024; 300+ cited in 2025)
+States: ~10 states (Sunbelt focus)
+HQ: Clearwater, FL
+Website: https://pinchapenny.com
+Parent: PoolCorp (acquired Dec 2021 via Porpoise Pool & Patio)
+Products: Chemicals, equipment, hot tubs, accessories, service
+Private Label: YES - Proprietary chemical product line (exclusive to franchisees)
+
+STATE PRESENCE (confirmed):
+  Florida:         ~250+ locations (majority of stores)
+  Texas:           Expanding (Dallas, Houston, Austin, San Antonio markets)
+  Alabama:         Mobile area
+  Arizona:         Phoenix, Tucson
+  Georgia:         Atlanta area
+  Nevada:          Las Vegas
+  North Carolina:  Raleigh area
+  South Carolina:  Expanding
+  Louisiana:       Expanding
+  Mississippi:     Expanding
+
+FRANCHISE EXPANSION MARKETS:
+  Active recruitment in TX, GA, FL, SC, AL, LA, MS, AZ, NV, NC
+
+
+================================================================================
+3. POOLCORP / SCP DISTRIBUTORS / SUPERIOR POOL PRODUCTS
+================================================================================
+Type: Wholesale Distributor (world's largest)
+Total US Locations: 424-430+ sales centers
+States: 42 states/territories
+HQ: Covington, LA
+Website: https://www.poolcorp.com / https://www.scppool.com
+Ticker: POOL (public)
+Products: Wholesale distribution of pools, hot tubs, chemicals, equipment,
+          outdoor living products
+Private Label: No - distributes major national brands
+
+DISTRIBUTION NETWORKS:
+  - SCP Distributors LLC: 228 sales centers (largest network)
+  - Superior Pool Products LLC: Part of SCP network
+  - Horizon Distributors: Irrigation/landscape (separate network)
+  Total PoolCorp: 350+ worldwide
+
+STATE-BY-STATE BREAKDOWN (Top 10 confirmed):
+  California:      82 locations
+  Florida:         72 locations
+  Texas:           64 locations
+  Arizona:         32 locations
+  Georgia:         12 locations
+  Washington:      11 locations
+  Tennessee:       11 locations
+  New Jersey:      10 locations
+  North Carolina:   9 locations
+  New York:         9 locations
+  [Remaining 32 states: ~118 locations combined]
+
+STATES WITH NO LOCATIONS:
+  South Dakota, Alaska, New Hampshire, Vermont, Wyoming,
+  Maine, Rhode Island, Montana, Delaware, DC
+
+Revenue concentration: >50% from CA, TX, FL, AZ markets
+Also owns: Pinch A Penny (291+ locations, counted separately above)
+
+
+================================================================================
+4. HERITAGE POOL SUPPLY GROUP
+================================================================================
+Type: Wholesale Distributor (2nd largest in US)
+Total US Locations: 150+ branches
+States: 36 states
+HQ: McKinney, TX (SRS Distribution parent)
+Website: https://www.heritagepoolsupplygroup.com
+Parent: The Home Depot (acquired June 2024 via SRS Distribution, $18.25B)
+Products: Wholesale chemicals, equipment, tile, pool supplies
+Private Label: No - distributes major brands
+
+OPERATING BRANDS / SUBSIDIARIES:
+  - Florida Water Products (FL)
+  - Pool & Electrical Products (multi-state)
+  - American Pool Supply
+  - Bel-Aqua Pool Supply
+  - Conely Company
+  - Mayfield Pool Supply
+  - Classic Pool Tile
+  - Noble Tile Supply
+  - Hachik Supply (Northeast)
+  - Texas Pool Supply (TX statewide)
+  - Nucci Brothers Pool Supplies (Islandia NY, Bridgeport CT)
+  - Island Pool & Spa Supply (Honolulu HI, Maui, Kona, Kauai)
+  - Aqua-Gon (Midwest, 4 branches)
+  - AquaCentral (umbrella for multiple acquired brands)
+
+RECENT EXPANSION (2024-2025):
+  - 22 new greenfield locations + 8 acquisitions in 2024
+  - New branches: Sanford FL (Feb 2025), San Diego CA (Mar 2025),
+    Alpharetta GA, and others
+  - Expanded into 6 new states in 2024
+  - Entered 15 additional metro areas in 2024
+
+CONFIRMED LOCATIONS:
+  Sanford, FL | San Diego, CA | Alpharetta, GA | Islandia, NY |
+  Bridgeport, CT | Honolulu, Maui, Kona, Kauai HI |
+  Lake Havasu City, AZ | Multiple TX cities
+
+
+================================================================================
+5. HAYWARD POOL PRODUCTS
+================================================================================
+Type: Manufacturer Dealer Network
+Total US Dealers: ~2,777 (as of June 2024, per ScrapeHero)
+States: All 50 states
+HQ: Charlotte, NC
+Website: https://www.hayward.com
+Ticker: HAYW (public)
+Products: Pumps, filters, heaters, cleaners, automation, salt chlorination,
+          water features, LED lighting
+Private Label: N/A (manufacturer)
+Dealer Locator: https://hayward.com/dealerlocator
+Contact: 1-800-282-1585
+
+Note: Dealers are independent pool builders, retailers, and service companies.
+Hayward also has the "Totally Hayward Partner Program" for certified dealers.
+
+
+================================================================================
+6. PENTAIR
+================================================================================
+Type: Manufacturer Dealer Network
+Total US Dealers: Not publicly disclosed (estimated thousands)
+States: All 50 states
+HQ: London, UK (global) / US Pool Operations: Apex, NC
+     (1701 Pinnacle Center Dr, Apex, NC 27539)
+Website: https://www.pentair.com
+Ticker: PNR (public)
+Products: Pumps, filters, heaters, cleaners, automation, lighting,
+          water treatment, salt systems
+Private Label: N/A (manufacturer)
+Dealer Locator: https://www.pentair.com/en-us/find-a-dealer/pool-spa.html
+Contact: +1 (919) 566-8000
+
+Note: Acquired Watkins Wellness (Hot Spring Spas) in 2023.
+Dealers are independent retailers and service companies.
+
+
+================================================================================
+7. BIOGUARD
+================================================================================
+Type: Pool Chemical Brand / Manufacturer Dealer Network
+Total US Dealers: ~1,500 authorized retailers
+States: All 50 states
+HQ: Part of KIK Consumer Products / Solenis
+Website: https://bioguard.com
+Dealer Locator: https://local.bioguard.com
+Products: Pool chemicals, spa chemicals, water testing products
+Private Label: N/A (BioGuard IS the brand)
+
+CONFIRMED STATE PRESENCE:
+  New York, Texas, Virginia, Connecticut, South Carolina, Maryland,
+  and all other states
+
+Note: BioGuard dealers are typically independent pool/spa retail stores
+that carry BioGuard as their primary chemical line. Many are small
+independent shops.
+
+
+================================================================================
+8. IN THE SWIM
+================================================================================
+Type: Online Retailer
+Total Locations: 1 outlet store + 9 distribution centers
+HQ/Outlet: 320 Industrial Dr, West Chicago, IL 60185
+Website: https://www.intheswim.com
+Parent: Leslie's (acquired)
+Products: Chemicals, equipment, covers, liners, accessories (4,000+ items)
+Private Label: YES - In The Swim branded chemicals
+Contact: 1-800-288-7946
+Also sells via: Amazon, eBay, Walmart.com
+
+Distribution centers: 9 locations nationwide (specific addresses not public)
+Offers curbside pickup at West Chicago outlet: 630-876-0040
+
+
+================================================================================
+9. POOL SUPPLY WORLD
+================================================================================
+Type: Online Retailer
+Total Locations: Online only
+HQ: 2005 E Indian School Rd, Phoenix, AZ 85016
+Website: https://poolsupplyworld.com
+Parent: Leslie's (acquired)
+Products: Chemicals, equipment, parts, accessories
+Private Label: No
+Also sells via: Amazon, eBay
+
+
+================================================================================
+10. POOLSUPPLIES.COM
+================================================================================
+Type: Online Retailer
+Total Locations: 1 warehouse/office (245,000 sq ft)
+HQ: 574 Main St, Tonawanda, NY 14150
+Website: https://www.poolsupplies.com
+Parent: Independent
+Founded: 1958 (as Island Pools by Richard Gerspach)
+Employees: ~99
+Products: Covers, liners, chemicals, equipment, parts
+Private Label: Unknown
+Distribution: Online + 60-page print catalog
+
+
+================================================================================
+11. DOHENY'S POOL SUPPLIES
+================================================================================
+Type: Online Retailer
+Total Locations: 9 warehouses
+HQ: 10411 80th Ave, Pleasant Prairie, WI 53158
+Website: https://www.doheny.com
+Parent: Independent (family-owned since 1967)
+Products: Chemicals, equipment, liners, covers, parts
+Private Label: YES - Doheny's brand chemicals and supplies
+
+WAREHOUSE LOCATIONS (9 states):
+  Ohio, Pennsylvania, South Carolina, Florida, Tennessee,
+  Illinois, Wisconsin, Texas, Nevada
+  (Specific addresses not public; enables next-day delivery)
+
+
+================================================================================
+12. SWIM UNIVERSITY
+================================================================================
+Type: Online Content / Affiliate / Small Product Sales
+Total Locations: 0 (digital only)
+HQ: N/A (Matt Giovanisci, founder - based in NJ originally)
+Website: https://www.swimuniversity.com
+Products: Educational content, affiliate links, some branded chemicals
+Private Label: YES - sells own branded pool chemical products
+Revenue Model: Affiliate marketing (Amazon Associates), digital products, YouTube
+
+Note: NOT a traditional retailer. Educational platform serving 10M+ homeowners.
+Founded 2006. Generates ~$1M/year.
+
+
+================================================================================
+13. JACUZZI (HOT TUBS)
+================================================================================
+Type: Manufacturer Dealer Network
+Total US Dealers: Not disclosed (estimated 200+ locations)
+States: National - all major metros
+HQ: Chino Hills, CA
+Website: https://www.jacuzzi.com
+Parent: Jacuzzi Group (private)
+Products: Hot tubs, swim spas, bath products
+Private Label: N/A (manufacturer)
+Dealer Locator: https://www.jacuzzi.com/en-us/find-a-dealer/
+Contact: 1-844-602-6064
+
+CONFIRMED DEALER LOCATIONS:
+  Matthews, NC (Jacuzzi Hot Tubs of Charlotte)
+  Holly Springs, NC (Jacuzzi Hot Tubs of the Triangle)
+  American Fork, UT (Take A Break Spas & Billiards)
+  St. Louis Park, MN (Twin City Jacuzzi)
+  Los Angeles, CA
+  Des Moines, IA
+  Toms River, NJ
+
+
+================================================================================
+14. HOT SPRING SPAS (WATKINS WELLNESS)
+================================================================================
+Type: Manufacturer Dealer Network
+Total US Dealers: 700-850+
+States: All 50 states
+HQ: Vista, CA (Watkins Wellness)
+Website: https://www.hotspring.com
+Parent: Pentair (acquired Watkins Wellness 2023)
+Products: Hot tubs, portable spas
+Private Label: N/A (manufacturer)
+Dealer Locator: https://www.hotspring.com/hot-tub-dealers
+
+CONFIRMED DEALER LOCATIONS:
+  San Jose/Campbell, CA (The Spa and Sauna Co.)
+  San Mateo, CA (Creative Energy - 4 CA locations)
+  Ogden/Salt Lake, UT (Hot Spring of Northern Utah)
+  Naperville, IL (American Sale - 8 IL locations)
+  Kansas City (Hot Spring Spas of KC)
+  Orlando/Daytona, FL (Spas Etc.)
+  Redding, CA (Hot Spring Spas of Redding)
+  Yakima Valley, WA (Shannon's Hot Spring Spas)
+
+Note: Largest hot tub brand by volume globally. Sister brands under
+Watkins: Caldera Spas, Freeflow Spas, Fantasy Spas.
+
+
+================================================================================
+15. BULLFROG SPAS
+================================================================================
+Type: Manufacturer Dealer Network + Factory Stores
+Total US Dealers: ~100+ (estimated, not publicly disclosed)
+States: National distribution
+HQ: Herriman, UT
+Website: https://www.bullfrogspas.com
+Parent: Independent
+Products: Hot tubs, swim spas (patented JetPak system)
+Private Label: N/A (manufacturer)
+Dealer Locator: https://www.bullfrogspas.com/stores/
+Factory Stores: https://www.bullfrogfactorystores.com/locations/
+
+CONFIRMED FACTORY STORE LOCATIONS:
+  Bluffdale, UT:    668 West 14600 South
+  Springville, UT:  1851 West 500 South, Suite C-1
+  Billings, MT:     2950 King Ave W
+  Mooresville, NC:  168 Norman Station Blvd H
+  Cary, NC:         2450 Walnut Street, Suite 16
+  Rockford, IL:     5513 E State Street
+
+CONFIRMED AUTHORIZED DEALER LOCATIONS:
+  Reno, NV:         1090 Kietzke Lane (Bullfrog Spas of Reno)
+  Johnson City, TN: 3428 Bristol Hwy (Bullfrog Spas of Tri-Cities)
+  Great Falls, MT:  (Bullfrog Spas & Stoves of Great Falls)
+
+
+================================================================================
+16. SUNDANCE SPAS
+================================================================================
+Type: Manufacturer Dealer Network
+Total US Dealers: Not disclosed (estimated 200+)
+States: National
+HQ: Chino Hills, CA
+Website: https://www.sundancespas.com
+Parent: Jacuzzi Group (sister brand to Jacuzzi)
+Products: Hot tubs, spas
+Private Label: N/A (manufacturer)
+Dealer Locator: https://www.sundancespas.com/en-us/find-a-dealer/
+Contact: 1-844-602-6065
+
+CONFIRMED DEALER LOCATIONS:
+  Los Angeles, CA (Sundance Spas & Sauna / Pacific Spas)
+  Des Moines, IA (Central Iowa Pool & Spa)
+  Toms River, NJ (Hot Tub Central)
+
+Note: 40+ years in business. International dealers in 60+ countries.
+
+
+================================================================================
+17. ACE HARDWARE (POOL CHEMICAL SECTION)
+================================================================================
+Type: General Retail Hardware (cooperative) - Pool Chemical Section
+Total US Stores: ~4,800-5,200 (not all carry pool chemicals)
+States: All 50 states
+HQ: Oak Brook, IL
+Website: https://www.acehardware.com
+Products: Pool chemicals (HTH brand primary), test kits, basic equipment,
+          above ground pools, spa chemicals, water balancers
+Private Label: No - carries HTH and other national brands
+Pool Section URL: https://www.acehardware.com/departments/outdoor-living/swimming-pools-spa-and-supplies
+
+Note: Independently owned stores. Pool chemical availability is seasonal
+and varies by individual store. Strongest pool sections in Sun Belt states.
+Some stores specialize (e.g., Outer Banks ACE Pools & Spas, NC;
+Hagan Ace Hardware pool section).
+
+
+================================================================================
+18. TRUE VALUE (POOL CHEMICAL SECTION)
+================================================================================
+Type: General Retail Hardware - Pool Chemical Section
+Total US Stores: ~4,500 (not all carry pool chemicals)
+States: All 50 states
+HQ: Chicago, IL
+Website: https://www.truevalue.com
+Parent: Merged with Do it Best Corp (2024)
+Products: Pool chlorine, shock, test kits, spa chemicals, water balancers,
+          maintenance equipment
+Private Label: No - carries national brands
+Pool Section URL: https://www.truevalue.com/shop/outdoor-living-patio/pools-pool-supplies/
+
+Note: Independently owned stores. Pool section varies by location.
+
+
+================================================================================
+19. ANTHONY & SYLVAN POOLS
+================================================================================
+Type: Regional Pool Builder + Retail Supply
+Total Locations: ~20 design centers + 3 retail supply stores
+States: PA, NJ, MD, VA, DC area (design centers in additional East Coast states)
+HQ: Doylestown, PA
+Website: https://anthonysylvan.com
+Online Store: https://anthonysylvanpoolsupplies.com
+Products: Pool construction, chemicals, equipment, cleaners, accessories
+Private Label: YES - Anthony & Sylvan branded supplies
+
+CONFIRMED RETAIL STORE LOCATIONS:
+  Doylestown, PA
+  Lancaster, PA
+  Manalapan, NJ
+
+Note: 70+ years in business. "America's Most Trusted Pool Builder."
+Carries Pentair, Jandy, Aquabot, Anchor Industries + own brand.
+
+
+================================================================================
+20. PATIO POOLS & SPAS (ARIZONA)
+================================================================================
+Type: Regional Retail + Builder
+Total Locations: 3
+States: Arizona only
+HQ: Tucson, AZ
+Website: https://patiopoolsaz.com
+Products: Pool construction, chemicals, equipment, Hot Spring Spas, service
+Private Label: Unknown
+
+LOCATIONS:
+  Tucson (22nd & Pantano): 7960 East 22nd Street, Tucson, AZ 85710
+    Phone: (520) 886-1211
+  Sierra Vista: 4148 Industry Drive, Suite 1108-1109, Sierra Vista, AZ 85635
+    Phone: (520) 458-9291
+  Oro Valley: 7918 N Oracle Rd, Oro Valley, AZ 85704
+    Phone: (520) 797-2299
+
+Note: 50+ years serving Southern Arizona. Authorized Hot Spring Spas dealer.
+Free water testing at all locations.
+
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+
+RETAIL CHAINS:
+  Leslie's Pool Supplies:        972 locations (37 states)
+  Pinch A Penny:                 291-300+ locations (~10 states)
+
+WHOLESALE DISTRIBUTORS:
+  PoolCorp/SCP:                  424-430+ locations (42 states)
+  Heritage Pool Supply:          150+ locations (36 states)
+
+MANUFACTURER DEALER NETWORKS:
+  Hayward:                       ~2,777 dealers
+  Pentair:                       Thousands (undisclosed)
+  BioGuard:                      ~1,500 authorized dealers
+  Hot Spring Spas:               700-850+ dealers
+  Jacuzzi:                       200+ estimated
+  Sundance Spas:                 200+ estimated
+  Bullfrog Spas:                 100+ estimated
+
+ONLINE RETAILERS:
+  In The Swim:                   9 distribution centers
+  Doheny's:                      9 warehouses
+  Pool Supply World:             Online only (Phoenix AZ)
+  PoolSupplies.com:              1 facility (Tonawanda NY)
+  Swim University:               Digital only
+
+GENERAL HARDWARE (POOL SECTIONS):
+  Ace Hardware:                  ~4,800-5,200 stores
+  True Value:                    ~4,500 stores
+
+REGIONAL:
+  Anthony & Sylvan:              ~23 locations (PA, NJ, East Coast)
+  Patio Pools & Spas:            3 locations (AZ)
+
+TOTAL ADDRESSABLE MARKET ESTIMATE:
+  Dedicated pool/spa retail locations:   ~1,600+
+  Wholesale distribution points:          ~600+
+  Manufacturer dealer points:             ~5,000+ (significant overlap)
+  General hardware w/ pool sections:      ~9,500+
+  Online-focused retailers:               ~30 distribution/warehouse points
+
+
+================================================================================
+KEY OWNERSHIP RELATIONSHIPS
+================================================================================
+
+POOLCORP FAMILY:
+  - PoolCorp/SCP/Superior Pool Products (424+ wholesale locations)
+  - Pinch A Penny (291+ retail franchise locations)
+  - Horizon Distributors (irrigation/landscape)
+
+LESLIE'S FAMILY:
+  - Leslie's Pool Supplies (972 retail locations)
+  - In The Swim (online + 9 DCs)
+  - Pool Supply World (online)
+
+HOME DEPOT FAMILY:
+  - Heritage Pool Supply Group (150+ wholesale locations)
+  - SRS Distribution (parent)
+
+PENTAIR / WATKINS FAMILY:
+  - Pentair equipment dealer network
+  - Hot Spring Spas dealer network (700-850+)
+  - Caldera Spas, Freeflow Spas, Fantasy Spas
+
+JACUZZI GROUP:
+  - Jacuzzi hot tub dealer network
+  - Sundance Spas dealer network
+
+
+================================================================================
+DATA SOURCES & URLS FOR FURTHER SCRAPING
+================================================================================
+
+STORE LOCATORS (for geocoding):
+  Leslie's:     https://lesliespool.com/stores
+  Pinch A Penny: https://pinchapenny.com/stores
+  PoolCorp:     https://www.poolcorp.com/sales-centers/
+  SCP:          https://www.scppool.com/sales-centers
+  Heritage:     https://www.heritagepoolsupplygroup.com/en/branch-locator/
+  Hayward:      https://hayward.com/dealerlocator
+  Pentair:      https://www.pentair.com/en-us/find-a-dealer/pool-spa.html
+  BioGuard:     https://local.bioguard.com
+  Jacuzzi:      https://www.jacuzzi.com/en-us/find-a-dealer/
+  Hot Spring:   https://www.hotspring.com/hot-tub-dealers
+  Bullfrog:     https://www.bullfrogspas.com/stores/
+  Sundance:     https://www.sundancespas.com/en-us/find-a-dealer/
+  Ace Hardware: https://www.acehardware.com/store-locator
+
+SCRAPED DATA VENDORS:
+  ScrapeHero:   https://www.scrapehero.com/store/ (paid datasets with addresses/coords)
+  Agenty:       https://agenty.com/marketplace/stores/
+  LocationsCloud: https://www.locationscloud.com/

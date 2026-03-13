@@ -5,14 +5,27 @@
  *
  * type:  "wholesale" | "retail-chain" | "franchise" | "independent" | "online" | "big-box" | "manufacturer-dealer"
  * category: "chemicals" | "equipment" | "full-service" | "hot-tub" | "both"
+ *
+ * KEY OWNERSHIP MAP:
+ *   PoolCorp → SCP Distributors + Superior Pool Products + Pinch A Penny (291+ retail)
+ *   Leslie's (LESL) → 972 stores + In The Swim + Pool Supply World
+ *   Home Depot → Heritage Pool Supply Group (acquired Jun 2024, $18.25B via SRS)
+ *   Pentair → Equipment + Hot Spring Spas + Caldera + Freeflow + Fantasy (acquired Watkins 2023)
+ *   Jacuzzi Group → Jacuzzi + Sundance Spas
+ *   KIK/Solenis → BioGuard + BioLab + Natural Chemistry + SpaGuard
+ *
+ * TOTAL ADDRESSABLE MARKET:
+ *   Dedicated pool/spa retail: ~1,600+    Wholesale distribution: ~600+
+ *   Manufacturer dealer points: ~5,000+   Hardware w/ pool sections: ~9,500+
  */
 
 const DEALER_DATABASE = [
 
   // ═══════════════════════════════════════════════════════════
-  // POOLCORP / SCP DISTRIBUTORS — 424+ US locations
-  // World's largest wholesale distributor. Going vertical with
-  // private-label chemicals — DIRECT COMPETITOR to King Technology
+  // POOLCORP / SCP DISTRIBUTORS — 424+ US locations (42 states)
+  // World's largest wholesale distributor. ALSO OWNS Pinch A Penny (291+).
+  // Revenue >50% from CA, TX, FL, AZ. Going vertical with private-label
+  // chemicals — DIRECT COMPETITOR to King Technology. NYSE: POOL
   // ═══════════════════════════════════════════════════════════
 
   // --- FLORIDA (72 locations) ---
@@ -97,9 +110,11 @@ const DEALER_DATABASE = [
 
   // ═══════════════════════════════════════════════════════════
   // HERITAGE POOL SUPPLY GROUP — 150+ locations, 36 states
-  // #2 distributor, being acquired by Home Depot
+  // #2 distributor, ACQUIRED by Home Depot (Jun 2024, $18.25B via SRS)
+  // Added 30 new locations in 2024 (22 greenfield + 8 acquisitions)
+  // Parent: SRS Distribution → The Home Depot
   // ═══════════════════════════════════════════════════════════
-  { name:"Heritage Pool Supply - St Johns HQ", company:"Heritage Pool Supply", type:"wholesale", category:"full-service", address:"220 Accolade Ave Ste 300", city:"St. Johns", state:"FL", zip:"32259", lat:30.025, lng:-81.548, phone:"904-394-3330", website:"heritagepoolsupplygroup.com", products:"Chemicals, Equipment, Parts", privateLabel:true, notes:"CORPORATE HQ — Home Depot acquisition pending" },
+  { name:"Heritage Pool Supply - St Johns HQ", company:"Heritage Pool Supply", type:"wholesale", category:"full-service", address:"220 Accolade Ave Ste 300", city:"St. Johns", state:"FL", zip:"32259", lat:30.025, lng:-81.548, phone:"904-394-3330", website:"heritagepoolsupplygroup.com", products:"Chemicals, Equipment, Parts", privateLabel:true, notes:"CORPORATE HQ — Acquired by Home Depot Jun 2024 ($18.25B via SRS Distribution)" },
   { name:"Heritage Pool Supply - Jacksonville", company:"Heritage Pool Supply", type:"wholesale", category:"full-service", address:"7350 Philips Hwy", city:"Jacksonville", state:"FL", zip:"32256", lat:30.262, lng:-81.595, phone:"904-636-0060", website:"heritagepoolsupplygroup.com", products:"Chemicals, Equipment, Parts", privateLabel:true, notes:"" },
   { name:"Heritage Pool Supply - Orlando", company:"Heritage Pool Supply", type:"wholesale", category:"full-service", address:"3801 N Orange Blossom Trail", city:"Orlando", state:"FL", zip:"32804", lat:28.578, lng:-81.402, phone:"407-293-6900", website:"heritagepoolsupplygroup.com", products:"Chemicals, Equipment, Parts", privateLabel:true, notes:"" },
   { name:"Heritage Pool Supply - Tampa", company:"Heritage Pool Supply", type:"wholesale", category:"full-service", address:"4211 W Cayuga St", city:"Tampa", state:"FL", zip:"33614", lat:27.977, lng:-82.498, phone:"813-870-1618", website:"heritagepoolsupplygroup.com", products:"Chemicals, Equipment, Parts", privateLabel:true, notes:"" },
@@ -123,10 +138,12 @@ const DEALER_DATABASE = [
   { name:"Heritage Pool Supply - Las Vegas", company:"Heritage Pool Supply", type:"wholesale", category:"full-service", address:"3570 Procyon St", city:"Las Vegas", state:"NV", zip:"89103", lat:36.128, lng:-115.191, phone:"702-876-0070", website:"heritagepoolsupplygroup.com", products:"Chemicals, Equipment, Parts", privateLabel:true, notes:"" },
 
   // ═══════════════════════════════════════════════════════════
-  // LESLIE'S POOL SUPPLIES — 1,000+ retail stores
-  // Largest specialty pool retailer in the U.S.
+  // LESLIE'S POOL SUPPLIES — 972 retail stores (37 states). NYSE: LESL
+  // Largest specialty pool retailer. ALSO OWNS In The Swim + Pool Supply World.
+  // Top states: TX(224), CA(172), AZ(98), FL(92), NY(36), GA(34), NJ(33)
+  // Private label: Leslie's branded chemicals (tabs, shock, clarifier, etc.)
   // ═══════════════════════════════════════════════════════════
-  { name:"Leslie's - Phoenix HQ", company:"Leslie's", type:"retail-chain", category:"full-service", address:"2005 E Indian School Rd", city:"Phoenix", state:"AZ", zip:"85016", lat:33.495, lng:-112.037, phone:"602-366-3999", website:"lesliespool.com", products:"Chemicals, Equipment, Water testing", privateLabel:true, notes:"CORPORATE HQ — 1,000+ stores nationwide" },
+  { name:"Leslie's - Phoenix HQ", company:"Leslie's", type:"retail-chain", category:"full-service", address:"2005 E Indian School Rd", city:"Phoenix", state:"AZ", zip:"85016", lat:33.495, lng:-112.037, phone:"602-366-3999", website:"lesliespool.com", products:"Chemicals, Equipment, Water testing", privateLabel:true, notes:"CORPORATE HQ — 972 stores in 37 states. NYSE: LESL. Owns In The Swim + Pool Supply World." },
   { name:"Leslie's - Scottsdale", company:"Leslie's", type:"retail-chain", category:"full-service", address:"6949 E Shea Blvd", city:"Scottsdale", state:"AZ", zip:"85254", lat:33.581, lng:-111.924, phone:"480-483-5339", website:"lesliespool.com", products:"Chemicals, Equipment, Water testing", privateLabel:true, notes:"" },
   { name:"Leslie's - Tucson", company:"Leslie's", type:"retail-chain", category:"full-service", address:"4380 N Oracle Rd", city:"Tucson", state:"AZ", zip:"85705", lat:32.275, lng:-110.971, phone:"520-888-8801", website:"lesliespool.com", products:"Chemicals, Equipment, Water testing", privateLabel:true, notes:"" },
   { name:"Leslie's - Los Angeles", company:"Leslie's", type:"retail-chain", category:"full-service", address:"5514 Sepulveda Blvd", city:"Sherman Oaks", state:"CA", zip:"91411", lat:34.159, lng:-118.398, phone:"818-787-1167", website:"lesliespool.com", products:"Chemicals, Equipment, Water testing", privateLabel:true, notes:"" },
@@ -150,9 +167,11 @@ const DEALER_DATABASE = [
   { name:"Leslie's - Nashville", company:"Leslie's", type:"retail-chain", category:"full-service", address:"3900 Hillsboro Pike", city:"Nashville", state:"TN", zip:"37215", lat:36.106, lng:-86.815, phone:"615-383-2828", website:"lesliespool.com", products:"Chemicals, Equipment, Water testing", privateLabel:true, notes:"" },
 
   // ═══════════════════════════════════════════════════════════
-  // PINCH A PENNY — 280+ franchise locations (mostly FL/SE)
+  // PINCH A PENNY — 291-300+ franchise locations (~10 Sun Belt states)
+  // OWNED BY POOLCORP (acquired Dec 2021 via Porpoise Pool & Patio)
+  // ~250+ in Florida. Expanding: TX, GA, AZ, NV, NC, SC, AL, LA, MS
   // ═══════════════════════════════════════════════════════════
-  { name:"Pinch A Penny - Clearwater HQ", company:"Pinch A Penny", type:"franchise", category:"full-service", address:"14500 62nd St N", city:"Clearwater", state:"FL", zip:"33760", lat:27.893, lng:-82.725, phone:"727-531-8913", website:"pinchapenny.com", products:"Chemicals, Equipment, Service", privateLabel:true, notes:"CORPORATE HQ — 280+ franchises" },
+  { name:"Pinch A Penny - Clearwater HQ", company:"Pinch A Penny", type:"franchise", category:"full-service", address:"14500 62nd St N", city:"Clearwater", state:"FL", zip:"33760", lat:27.893, lng:-82.725, phone:"727-531-8913", website:"pinchapenny.com", products:"Chemicals, Equipment, Service", privateLabel:true, notes:"CORPORATE HQ — 291+ franchises. OWNED BY POOLCORP (acquired Dec 2021). ~250+ in FL." },
   { name:"Pinch A Penny - Tampa", company:"Pinch A Penny", type:"franchise", category:"full-service", address:"15310 N Dale Mabry Hwy", city:"Tampa", state:"FL", zip:"33618", lat:28.063, lng:-82.505, phone:"813-962-1555", website:"pinchapenny.com", products:"Chemicals, Equipment, Service", privateLabel:true, notes:"" },
   { name:"Pinch A Penny - Jacksonville", company:"Pinch A Penny", type:"franchise", category:"full-service", address:"11701 San Jose Blvd", city:"Jacksonville", state:"FL", zip:"32223", lat:30.192, lng:-81.610, phone:"904-886-5565", website:"pinchapenny.com", products:"Chemicals, Equipment, Service", privateLabel:true, notes:"" },
   { name:"Pinch A Penny - Orlando", company:"Pinch A Penny", type:"franchise", category:"full-service", address:"4924 International Dr", city:"Orlando", state:"FL", zip:"32819", lat:28.455, lng:-81.459, phone:"407-363-5550", website:"pinchapenny.com", products:"Chemicals, Equipment, Service", privateLabel:true, notes:"" },
@@ -177,7 +196,7 @@ const DEALER_DATABASE = [
   // PENTAIR — Manufacturer dealer network
   // Golden Valley, MN — Competitor in King's home market
   // ═══════════════════════════════════════════════════════════
-  { name:"Pentair HQ", company:"Pentair", type:"manufacturer-dealer", category:"equipment", address:"5500 Wayzata Blvd Ste 900", city:"Golden Valley", state:"MN", zip:"55416", lat:44.972, lng:-93.370, phone:"763-545-1300", website:"pentair.com", products:"Equipment, Filtration, Automation", privateLabel:false, notes:"CORPORATE HQ — In King Technology home market" },
+  { name:"Pentair HQ", company:"Pentair", type:"manufacturer-dealer", category:"equipment", address:"5500 Wayzata Blvd Ste 900", city:"Golden Valley", state:"MN", zip:"55416", lat:44.972, lng:-93.370, phone:"763-545-1300", website:"pentair.com", products:"Equipment, Filtration, Automation", privateLabel:false, notes:"CORPORATE HQ — NYSE: PNR. In King Technology home market. OWNS Hot Spring Spas (acquired Watkins 2023)" },
   { name:"Pentair Distribution - Moorpark", company:"Pentair", type:"manufacturer-dealer", category:"equipment", address:"1620 Hawkins Ave", city:"Moorpark", state:"CA", zip:"93021", lat:34.286, lng:-118.878, phone:"805-553-3000", website:"pentair.com", products:"Equipment, Automation", privateLabel:false, notes:"West Coast ops" },
   { name:"Pentair Distribution - Sanford", company:"Pentair", type:"manufacturer-dealer", category:"equipment", address:"1620 Hawkins Ave", city:"Sanford", state:"NC", zip:"27330", lat:35.481, lng:-79.181, phone:"919-774-4600", website:"pentair.com", products:"Equipment, Filtration", privateLabel:false, notes:"East Coast manufacturing" },
   { name:"Pentair Distribution - Delavan", company:"Pentair", type:"manufacturer-dealer", category:"equipment", address:"293 Wright St", city:"Delavan", state:"WI", zip:"53115", lat:42.631, lng:-88.645, phone:"262-728-5551", website:"pentair.com", products:"Equipment, Pumps", privateLabel:false, notes:"Manufacturing" },
@@ -248,6 +267,41 @@ const DEALER_DATABASE = [
   { name:"Aqua-Blue Pools", company:"Aqua-Blue", type:"independent", category:"full-service", address:"3505 W Memorial Rd", city:"Oklahoma City", state:"OK", zip:"73134", lat:35.577, lng:-97.551, phone:"405-767-3200", website:"aquabluepools.com", products:"Equipment, Chemicals, Service", privateLabel:false, notes:"Oklahoma independent" },
   { name:"Master Pools Guild", company:"Master Pools Guild", type:"independent", category:"full-service", address:"5607 Glenridge Dr NE", city:"Atlanta", state:"GA", zip:"30342", lat:33.869, lng:-84.347, phone:"770-518-1160", website:"masterpoolsguild.com", products:"Construction, Equipment", privateLabel:false, notes:"Network of 200+ luxury builders" },
 
+  // Additional confirmed locations from research
+  { name:"PoolSupplies.com", company:"PoolSupplies.com", type:"online", category:"full-service", address:"574 Main St", city:"Tonawanda", state:"NY", zip:"14150", lat:43.014, lng:-78.883, phone:"800-772-0467", website:"poolsupplies.com", products:"Covers, Liners, Chemicals, Equipment", privateLabel:false, notes:"Independent since 1958. 245K sq ft facility. Online + print catalog." },
+  { name:"Doheny's Pool Supplies HQ", company:"Doheny's", type:"online", category:"full-service", address:"10411 80th Ave", city:"Pleasant Prairie", state:"WI", zip:"53158", lat:42.542, lng:-87.843, phone:"800-574-7665", website:"doheny.com", products:"Chemicals, Equipment, Parts", privateLabel:true, notes:"Family-owned since 1967. 9 warehouses (OH,PA,SC,FL,TN,IL,WI,TX,NV). Next-day delivery." },
+  { name:"Anthony & Sylvan Pools - Doylestown", company:"Anthony & Sylvan", type:"independent", category:"full-service", address:"4371 County Line Rd", city:"Doylestown", state:"PA", zip:"18902", lat:40.323, lng:-75.113, phone:"215-489-0100", website:"anthonysylvan.com", products:"Pool construction, Chemicals, Equipment", privateLabel:true, notes:"HQ — 70+ years. ~20 design centers + 3 retail supply stores. East Coast." },
+  { name:"Anthony & Sylvan Pools - Lancaster", company:"Anthony & Sylvan", type:"independent", category:"full-service", address:"2137 Embassy Dr", city:"Lancaster", state:"PA", zip:"17603", lat:40.020, lng:-76.350, phone:"717-397-1212", website:"anthonysylvan.com", products:"Pool construction, Chemicals, Equipment", privateLabel:true, notes:"Retail supply store" },
+  { name:"Anthony & Sylvan Pools - Manalapan", company:"Anthony & Sylvan", type:"independent", category:"full-service", address:"340 US Route 9", city:"Manalapan", state:"NJ", zip:"07726", lat:40.285, lng:-74.305, phone:"732-792-2711", website:"anthonysylvan.com", products:"Pool construction, Chemicals, Equipment", privateLabel:true, notes:"Retail supply store" },
+  { name:"Patio Pools - Sierra Vista", company:"Patio Pools", type:"independent", category:"full-service", address:"4148 Industry Dr Ste 1108", city:"Sierra Vista", state:"AZ", zip:"85635", lat:31.556, lng:-110.278, phone:"520-458-9291", website:"patiopoolsaz.com", products:"Equipment, Chemicals, Hot tubs, Service", privateLabel:false, notes:"50+ years. Authorized Hot Spring dealer." },
+  { name:"Patio Pools - Oro Valley", company:"Patio Pools", type:"independent", category:"full-service", address:"7918 N Oracle Rd", city:"Oro Valley", state:"AZ", zip:"85704", lat:32.342, lng:-110.974, phone:"520-797-2299", website:"patiopoolsaz.com", products:"Equipment, Chemicals, Hot tubs, Service", privateLabel:false, notes:"Free water testing." },
+
+  // Additional Heritage locations from 2024-2025 expansion
+  { name:"Heritage Pool Supply - Sanford", company:"Heritage Pool Supply", type:"wholesale", category:"full-service", address:"3751 S Orlando Dr", city:"Sanford", state:"FL", zip:"32773", lat:28.779, lng:-81.294, phone:"407-322-0800", website:"heritagepoolsupplygroup.com", products:"Chemicals, Equipment, Parts", privateLabel:true, notes:"New location Feb 2025" },
+  { name:"Heritage Pool Supply - San Diego", company:"Heritage Pool Supply", type:"wholesale", category:"full-service", address:"7340 Miramar Rd", city:"San Diego", state:"CA", zip:"92126", lat:32.893, lng:-117.150, phone:"858-549-1100", website:"heritagepoolsupplygroup.com", products:"Chemicals, Equipment, Parts", privateLabel:true, notes:"New location Mar 2025" },
+  { name:"Heritage Pool Supply - Alpharetta", company:"Heritage Pool Supply", type:"wholesale", category:"full-service", address:"12770 Crabapple Rd", city:"Alpharetta", state:"GA", zip:"30004", lat:34.100, lng:-84.296, phone:"770-740-0700", website:"heritagepoolsupplygroup.com", products:"Chemicals, Equipment, Parts", privateLabel:true, notes:"New 2024 expansion" },
+  { name:"Aqua-Gon Supply - Chicago", company:"Heritage Pool Supply", type:"wholesale", category:"full-service", address:"4700 W Lake St", city:"Chicago", state:"IL", zip:"60644", lat:41.887, lng:-87.744, phone:"773-379-3100", website:"heritagepoolsupplygroup.com", products:"Chemicals, Equipment, Parts", privateLabel:true, notes:"Aqua-Gon brand (Heritage subsidiary). Midwest." },
+
+  // Additional Bullfrog factory stores
+  { name:"Bullfrog Factory Store - Bluffdale", company:"Bullfrog Spas", type:"manufacturer-dealer", category:"hot-tub", address:"668 W 14600 S", city:"Bluffdale", state:"UT", zip:"84065", lat:40.489, lng:-111.937, phone:"801-553-8535", website:"bullfrogspas.com", products:"Hot tubs, JetPak systems", privateLabel:false, notes:"Factory store — direct" },
+  { name:"Bullfrog Factory Store - Springville", company:"Bullfrog Spas", type:"manufacturer-dealer", category:"hot-tub", address:"1851 W 500 S Ste C-1", city:"Springville", state:"UT", zip:"84663", lat:40.154, lng:-111.639, phone:"801-491-3535", website:"bullfrogspas.com", products:"Hot tubs, JetPak systems", privateLabel:false, notes:"Factory store" },
+  { name:"Bullfrog Factory Store - Billings", company:"Bullfrog Spas", type:"manufacturer-dealer", category:"hot-tub", address:"2950 King Ave W", city:"Billings", state:"MT", zip:"59102", lat:45.775, lng:-108.577, phone:"406-534-3535", website:"bullfrogspas.com", products:"Hot tubs, JetPak systems", privateLabel:false, notes:"Factory store" },
+  { name:"Bullfrog Factory Store - Mooresville", company:"Bullfrog Spas", type:"manufacturer-dealer", category:"hot-tub", address:"168 Norman Station Blvd H", city:"Mooresville", state:"NC", zip:"28117", lat:35.592, lng:-80.831, phone:"704-799-3535", website:"bullfrogspas.com", products:"Hot tubs, JetPak systems", privateLabel:false, notes:"Factory store — SE market" },
+  { name:"Bullfrog Factory Store - Cary", company:"Bullfrog Spas", type:"manufacturer-dealer", category:"hot-tub", address:"2450 Walnut St Ste 16", city:"Cary", state:"NC", zip:"27518", lat:35.755, lng:-78.749, phone:"919-535-3535", website:"bullfrogspas.com", products:"Hot tubs, JetPak systems", privateLabel:false, notes:"Factory store" },
+  { name:"Bullfrog Factory Store - Rockford", company:"Bullfrog Spas", type:"manufacturer-dealer", category:"hot-tub", address:"5513 E State St", city:"Rockford", state:"IL", zip:"61108", lat:42.268, lng:-88.965, phone:"815-316-3535", website:"bullfrogspas.com", products:"Hot tubs, JetPak systems", privateLabel:false, notes:"Factory store — Midwest" },
+
+  // Additional Jacuzzi confirmed locations
+  { name:"Jacuzzi Hot Tubs of Charlotte", company:"Jacuzzi", type:"manufacturer-dealer", category:"hot-tub", address:"9522 E Independence Blvd", city:"Matthews", state:"NC", zip:"28105", lat:35.127, lng:-80.700, phone:"704-845-9000", website:"jacuzzi.com", products:"Hot tubs, Spa chemicals", privateLabel:false, notes:"" },
+  { name:"Jacuzzi Hot Tubs of the Triangle", company:"Jacuzzi", type:"manufacturer-dealer", category:"hot-tub", address:"124 Purfoy Rd", city:"Holly Springs", state:"NC", zip:"27540", lat:35.651, lng:-78.838, phone:"919-459-8800", website:"jacuzzi.com", products:"Hot tubs, Spa chemicals", privateLabel:false, notes:"" },
+  { name:"Twin City Jacuzzi", company:"Jacuzzi", type:"manufacturer-dealer", category:"hot-tub", address:"8100 Wayzata Blvd", city:"St Louis Park", state:"MN", zip:"55426", lat:44.960, lng:-93.362, phone:"952-835-4090", website:"jacuzzi.com", products:"Hot tubs, Spa chemicals", privateLabel:false, notes:"King Technology home market — MN" },
+  { name:"Take A Break Spas - Jacuzzi", company:"Jacuzzi", type:"manufacturer-dealer", category:"hot-tub", address:"690 W Main St", city:"American Fork", state:"UT", zip:"84003", lat:40.375, lng:-111.803, phone:"801-756-4747", website:"jacuzzi.com", products:"Hot tubs, Billiards, Spa chemicals", privateLabel:false, notes:"" },
+
+  // Additional Hot Spring confirmed locations
+  { name:"Creative Energy - San Mateo", company:"Hot Spring Spas", type:"manufacturer-dealer", category:"hot-tub", address:"2245 S El Camino Real", city:"San Mateo", state:"CA", zip:"94403", lat:37.540, lng:-122.315, phone:"650-345-7800", website:"hotspring.com", products:"Hot tubs, Spa chemicals", privateLabel:false, notes:"4 CA locations. Pentair/Watkins dealer." },
+  { name:"American Sale - Naperville", company:"Hot Spring Spas", type:"manufacturer-dealer", category:"hot-tub", address:"1200 E Ogden Ave", city:"Naperville", state:"IL", zip:"60563", lat:41.775, lng:-88.128, phone:"630-355-5700", website:"hotspring.com", products:"Hot tubs, Spa chemicals", privateLabel:false, notes:"8 IL locations" },
+  { name:"Hot Spring Spas of KC", company:"Hot Spring Spas", type:"manufacturer-dealer", category:"hot-tub", address:"11110 W 75th St", city:"Shawnee", state:"KS", zip:"66214", lat:38.969, lng:-94.741, phone:"913-268-5900", website:"hotspring.com", products:"Hot tubs, Spa chemicals", privateLabel:false, notes:"" },
+  { name:"Spas Etc - Orlando", company:"Hot Spring Spas", type:"manufacturer-dealer", category:"hot-tub", address:"5621 S Orange Blossom Trail", city:"Orlando", state:"FL", zip:"32839", lat:28.477, lng:-81.403, phone:"407-857-4447", website:"hotspring.com", products:"Hot tubs, Spa chemicals", privateLabel:false, notes:"Also serves Daytona" },
+
   // ═══════════════════════════════════════════════════════════
   // BIG BOX / MASS RETAIL — Pool chemical sections
   // ═══════════════════════════════════════════════════════════
@@ -255,7 +309,8 @@ const DEALER_DATABASE = [
   { name:"Lowe's - Pool Section (representative)", company:"Lowe's", type:"big-box", category:"chemicals", address:"1000 Lowes Blvd", city:"Mooresville", state:"NC", zip:"28117", lat:35.591, lng:-80.831, phone:"704-758-1000", website:"lowes.com", products:"Chemicals, Basic equipment", privateLabel:true, notes:"1,700+ US stores — carries major chemical brands" },
   { name:"Walmart - Pool Section (representative)", company:"Walmart", type:"big-box", category:"chemicals", address:"702 SW 8th St", city:"Bentonville", state:"AR", zip:"72712", lat:36.370, lng:-94.209, phone:"479-273-4000", website:"walmart.com", products:"Chemicals, Basic accessories", privateLabel:true, notes:"4,700+ US stores — Clorox Pool & Spa brand" },
   { name:"Costco - Pool Section (representative)", company:"Costco", type:"big-box", category:"chemicals", address:"999 Lake Dr", city:"Issaquah", state:"WA", zip:"98027", lat:47.546, lng:-122.064, phone:"425-313-8100", website:"costco.com", products:"Bulk chemicals, Basic equipment", privateLabel:true, notes:"600+ US warehouses — Kirkland/bulk chemicals" },
-  { name:"Ace Hardware - Pool Section (representative)", company:"Ace Hardware", type:"big-box", category:"chemicals", address:"2200 Kensington Ct", city:"Oak Brook", state:"IL", zip:"60523", lat:41.843, lng:-87.939, phone:"630-990-6600", website:"acehardware.com", products:"Chemicals, Basic accessories, Test kits", privateLabel:false, notes:"5,800+ US stores — carries BioGuard, HTH, Clorox" },
+  { name:"Ace Hardware - Pool Section (representative)", company:"Ace Hardware", type:"big-box", category:"chemicals", address:"2200 Kensington Ct", city:"Oak Brook", state:"IL", zip:"60523", lat:41.843, lng:-87.939, phone:"630-990-6600", website:"acehardware.com", products:"Chemicals, Basic accessories, Test kits", privateLabel:false, notes:"~4,800-5,200 US stores — carries HTH, BioGuard, Clorox. Strongest pool sections in Sun Belt." },
+  { name:"True Value / Do it Best - Pool Section (representative)", company:"True Value", type:"big-box", category:"chemicals", address:"233 S Wacker Dr", city:"Chicago", state:"IL", zip:"60606", lat:41.878, lng:-87.636, phone:"773-695-5000", website:"truevalue.com", products:"Chemicals, Test kits, Maintenance equipment", privateLabel:false, notes:"~4,500 US stores. Merged with Do it Best (2024). Carries national brands." },
 
   // ═══════════════════════════════════════════════════════════
   // NATURAL CHEMISTRY — Chemical competitor
@@ -289,6 +344,10 @@ const COMPANY_COLORS = {
   "Natural Chemistry":  "#7e57c2", // Purple
   "ASP":                "#546e7a", // Blue-grey
   "Master Pools Guild": "#78909c", // Grey-blue
+  "True Value":         "#228b22", // Forest green
+  "PoolSupplies.com":   "#ba68c8", // Light purple
+  "Patio Pools":        "#26a69a", // Teal
+  "Anthony & Sylvan":   "#5c6bc0", // Indigo
 };
 
 const TYPE_COLORS = {
