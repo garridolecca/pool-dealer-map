@@ -6,33 +6,35 @@ Interactive ArcGIS JavaScript application mapping pool and hot tub chemical deal
 
 ## What This Maps
 
-**Total: 4,716 dealer locations with real addresses and coordinates**
+**Total: 12,016 dealer locations with real addresses and coordinates**
 
-| Category | Companies | Mapped |
-|----------|-----------|--------|
-| **Wholesale Distributors** | PoolCorp/SCP, Heritage Pool Supply | 528 |
-| **Retail Chains** | Leslie's Pool Supplies (NYSE: LESL) | 877 |
-| **Franchises** | Pinch A Penny (PoolCorp-owned) | 309 |
-| **Chemical Dealers** | BioGuard/BioLab (KIK/Solenis) authorized retailers | 863 |
-| **Hot Tub - Jacuzzi** | Jacuzzi dealer network | 1,150 |
-| **Hot Tub - Hot Spring** | Hot Spring Spas (Pentair/Watkins) | 593 |
-| **Hot Tub - Sundance** | Sundance Spas (Jacuzzi Group) | 284 |
-| **Equipment Dealers** | Pentair authorized dealers | 98 |
-| **Big Box Retail** | Home Depot, Lowe's, Walmart, Costco, Ace | HQ/representative |
-| **Online Retailers** | In The Swim, Pool Supply World, Doheny's, PoolSupplies.com | HQ/warehouses |
-| **King Technology** | FROG Products HQ | Minnetonka, MN |
+| Category | Companies | Mapped | Source |
+|----------|-----------|--------|--------|
+| **Equipment Dealers** | Pentair (NYSE: PNR) | 7,398 | Salesforce SFDC API |
+| **Hot Tub - Jacuzzi** | Jacuzzi dealer network | 1,150 | jacuzzi.com API |
+| **Retail Chains** | Leslie's Pool Supplies (NYSE: LESL) | 877 | Demandware API |
+| **Chemical Dealers** | BioGuard (KIK/Solenis) authorized retailers | 863 | local.bioguard.com |
+| **Hot Tub - Hot Spring** | Hot Spring Spas (Pentair/Watkins) | 593 | hotspring.com |
+| **Wholesale Distributors** | PoolCorp/SCP (NYSE: POOL) | 413 | poolcorp.com map API |
+| **Franchises** | Pinch A Penny (PoolCorp-owned) | 309 | pinchapenny.com API |
+| **Hot Tub - Sundance** | Sundance Spas (Jacuzzi Group) | 284 | sundancespas.com API |
+| **Wholesale Distributors** | Heritage Pool Supply (Home Depot) | 115 | Web research + locator |
+| **Big Box Retail** | Home Depot, Lowe's, Walmart, Costco, Ace | HQ/representative | Manual |
+| **Online Retailers** | In The Swim, Pool Supply World, Doheny's | HQ/warehouses | Manual |
+| **King Technology** | FROG Products HQ | 1 | Manual |
 
 ### Top States by Dealer Count
 | State | Dealers | State | Dealers |
 |-------|---------|-------|---------|
-| TX | 488 | NJ | 111 |
-| FL | 468 | IL | 105 |
-| CA | 438 | OH | 102 |
-| GA | 200 | WA | 102 |
-| AZ | 171 | MI | 101 |
-| NY | 156 | VA | 100 |
-| PA | 134 | TN | 82 |
-| NC | 114 | | |
+| CA | 1,316 | NJ | 295 |
+| FL | 1,249 | WI | 289 |
+| TX | 1,135 | GA | 282 |
+| PA | 404 | WA | 281 |
+| IL | 364 | OH | 263 |
+| NY | 356 | VA | 230 |
+| AZ | 330 | IN | 132 |
+| MI | 329 | MN | 125 |
+| NC | 310 | | |
 
 ## Key Ownership Consolidation
 
