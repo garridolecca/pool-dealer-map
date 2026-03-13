@@ -52,7 +52,7 @@ calcite-navigation { --calcite-color-brand: #1a1a2e; }
 
 @media (max-width: 1024px) {
   calcite-shell-panel[slot="panel-start"] { --calcite-shell-panel-width: 280px; }
-  calcite-shell-panel[slot="panel-end"] { --calcite-shell-panel-width: 280px; }
+  calcite-shell-panel[slot="panel-end"] { --calcite-shell-panel-width: 360px; }
 }
 
 @media (max-width: 640px) {
