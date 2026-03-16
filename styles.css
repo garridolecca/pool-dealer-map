@@ -32,6 +32,33 @@ calcite-navigation { --calcite-color-brand: #1a1a2e; }
   border: 1px solid rgba(255,255,255,0.25);
 }
 
+/* ── Welcome modal ──────────────────────────────── */
+.welcome-section { margin-bottom: 18px; }
+.welcome-section h3 {
+  margin: 0 0 6px 0; font-size: 14px; font-weight: 700;
+  color: var(--calcite-color-brand); letter-spacing: 0.3px;
+}
+.welcome-section p { margin: 0 0 8px 0; font-size: 13px; line-height: 1.5; opacity: 0.9; }
+.welcome-products {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 8px 10px; margin: 8px 0;
+  background: rgba(255,255,255,0.04); border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);
+}
+.welcome-product-group { display: flex; gap: 8px; font-size: 12px; align-items: baseline; }
+.welcome-product-group strong { min-width: 90px; color: #00ff88; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+.welcome-product-group span { opacity: 0.8; }
+.welcome-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 4px 0; }
+.welcome-table th {
+  text-align: left; padding: 5px 8px; font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.5px; opacity: 0.5; border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.welcome-table td { padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.welcome-table td:last-child { text-align: right; font-weight: 600; color: var(--calcite-color-brand); }
+.welcome-table tbody tr:hover { background: rgba(255,255,255,0.04); }
+.welcome-list { margin: 4px 0 0 0; padding-left: 18px; font-size: 13px; line-height: 1.8; }
+.welcome-list li { opacity: 0.9; }
+.welcome-list strong { color: var(--calcite-color-brand); }
+
 /* ── FROG highlight ─────────────────────────────── */
 .frog-highlight {
   background: rgba(0,255,136,0.08);

@@ -114,6 +114,76 @@
 
   </calcite-shell>
 
+  <!-- Welcome Modal -->
+  <calcite-modal id="welcome-modal" open width-scale="m" kind="brand">
+    <div slot="header">FROG Dealer Intelligence Map</div>
+    <div slot="content" id="welcome-content">
+      <div class="welcome-section">
+        <h3>What is this?</h3>
+        <p>An interactive competitive intelligence platform built for <strong>King Technology</strong> to visualize the U.S. pool and hot tub dealer landscape. It maps <strong>12,600+ dealer locations</strong> across 50 states and identifies which dealers currently carry <strong>FROG</strong> water care products.</p>
+      </div>
+
+      <div class="welcome-section">
+        <h3>FROG Product Scanner</h3>
+        <p>An automated scanner crawled <strong>1,793 unique dealer websites</strong> searching for mentions of FROG product lines:</p>
+        <div class="welcome-products">
+          <div class="welcome-product-group">
+            <strong>Hot Tub</strong>
+            <span>Frog @ease, Serene, Maintain, Balancing Basics</span>
+          </div>
+          <div class="welcome-product-group">
+            <strong>Pool</strong>
+            <span>Pool Cycler, Bac PACs, Mineral Reservoir, BAM</span>
+          </div>
+          <div class="welcome-product-group">
+            <strong>Pool Solutions</strong>
+            <span>No More Phos, No More Cloudy, No More Algae, Algae 90 Day</span>
+          </div>
+        </div>
+        <p>Dealers are scored by confidence: <span style="color:#00ff88;font-weight:600">High</span> (3+ products), <span style="color:#f1c40f;font-weight:600">Medium</span> (1-2 products), <span style="color:#ff9800;font-weight:600">Low</span> (general mention).</p>
+      </div>
+
+      <div class="welcome-section">
+        <h3>Data Sources</h3>
+        <table class="welcome-table">
+          <thead><tr><th>Source</th><th>Method</th><th>Dealers</th></tr></thead>
+          <tbody>
+            <tr><td>Pentair</td><td>Salesforce dealer database</td><td>~7,400</td></tr>
+            <tr><td>Jacuzzi / Sundance</td><td>Dealer locator API</td><td>~1,430</td></tr>
+            <tr><td>Leslie's</td><td>Store locator (Demandware)</td><td>~880</td></tr>
+            <tr><td>BioGuard</td><td>SOCi store locator crawl</td><td>~860</td></tr>
+            <tr><td>Hot Spring Spas</td><td>Dealer page scraping</td><td>~590</td></tr>
+            <tr><td>PoolCorp / SCP</td><td>Map API extraction</td><td>~420</td></tr>
+            <tr><td>Bullfrog / Caldera</td><td>Sitemap crawl</td><td>~640</td></tr>
+            <tr><td>Pinch A Penny</td><td>Store locator</td><td>~310</td></tr>
+            <tr><td>Heritage Pool</td><td>Location data</td><td>~115</td></tr>
+            <tr><td>Others</td><td>Manual + HQ entries</td><td>~16</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="welcome-section">
+        <h3>How to Use</h3>
+        <ul class="welcome-list">
+          <li><strong>Click any stat row</strong> in the left panel to filter the map</li>
+          <li><strong>Click a dealer dot</strong> on the map to see full details</li>
+          <li>Use the <strong>binoculars button</strong> to show only FROG dealers</li>
+          <li>Toggle <strong>clustering</strong> or <strong>heatmap</strong> for density views</li>
+          <li><strong>Search</strong> by name, company, city, or state</li>
+          <li>Filter by <strong>Channel</strong>: Distribution, OEM, Independent, Direct</li>
+        </ul>
+      </div>
+
+      <calcite-notice open icon="lock" kind="warning" scale="s">
+        <div slot="title">Confidential</div>
+        <div slot="message">This tool and its data are proprietary to King Technology. Do not share externally.</div>
+      </calcite-notice>
+    </div>
+    <div slot="primary">
+      <calcite-button id="btn-close-welcome" width="full" icon-end="arrow-right">Explore the Map</calcite-button>
+    </div>
+  </calcite-modal>
+
   <script src="dealers-data.js"></script>
   <script src="app.js"></script>
 </body>

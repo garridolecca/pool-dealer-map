@@ -579,6 +579,22 @@ require([
   });
 
   // ═══════════════════════════════════════════════════
+  // WELCOME MODAL
+  // ═══════════════════════════════════════════════════
+  var welcomeModal = document.getElementById("welcome-modal");
+  var btnCloseWelcome = document.getElementById("btn-close-welcome");
+  if (btnCloseWelcome) {
+    btnCloseWelcome.addEventListener("click", function() {
+      if (welcomeModal) welcomeModal.removeAttribute("open");
+    });
+  }
+  if (welcomeModal) {
+    welcomeModal.addEventListener("calciteModalClose", function() {
+      welcomeModal.removeAttribute("open");
+    });
+  }
+
+  // ═══════════════════════════════════════════════════
   // MOBILE
   // ═══════════════════════════════════════════════════
   var mobileToggle = document.getElementById("mobile-panel-toggle");
