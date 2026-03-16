@@ -32,6 +32,14 @@ calcite-navigation { --calcite-color-brand: #1a1a2e; }
   border: 1px solid rgba(255,255,255,0.25);
 }
 
+/* ── FROG highlight ─────────────────────────────── */
+.frog-highlight {
+  background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 6px;
+  padding: 8px 6px;
+}
+
 /* ── Active filter chips ────────────────────────── */
 .active-filters { padding: 6px 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
 .active-filters-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }

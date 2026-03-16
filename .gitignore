@@ -24,5 +24,10 @@ bioguard_output.js
 pool_hottub_dealers_dataset.csv
 dealer_data_reference.txt
 
+# Frog scanner output (merged into dealers-data.js by build)
+frog_scan_results.json
+frog_scan_checkpoint.json
+frog_dealers_found.csv
+
 # Build
 build-data.js

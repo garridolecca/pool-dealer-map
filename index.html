@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>U.S. Pool & Hot Tub Dealer Map — King Technology Intelligence</title>
+  <title>U.S. Pool & Hot Tub Dealer Map — King Technology / FROG Intelligence</title>
   <link rel="stylesheet" href="https://js.arcgis.com/4.31/esri/themes/dark/main.css" />
   <script src="https://js.arcgis.com/4.31/"></script>
   <script type="module" src="https://js.arcgis.com/calcite-components/2.13.2/calcite.esm.js"></script>
@@ -15,15 +15,17 @@
 
     <calcite-navigation slot="header">
       <calcite-navigation-logo slot="logo"
-        heading="Pool & Hot Tub Dealer Intelligence"
-        description="King Technology — Competitive Landscape"
+        heading="FROG Dealer Intelligence"
+        description="King Technology — Dealer & Product Coverage"
         icon="map-pin">
       </calcite-navigation-logo>
       <div slot="content-end" class="header-actions">
         <calcite-action id="btn-zoom-all" icon="zoom-to-object" text="Zoom to all" scale="s"></calcite-action>
         <calcite-action id="btn-toggle-cluster" icon="clustering" text="Enable clustering" scale="s"></calcite-action>
         <calcite-action id="btn-toggle-heat" icon="layer-heat-map" text="Heatmap" scale="s"></calcite-action>
+        <calcite-action id="btn-toggle-frog" icon="binoculars" text="FROG dealers only" scale="s"></calcite-action>
         <calcite-chip id="dealer-count-chip" kind="brand" scale="s" icon="pin">Loading...</calcite-chip>
+        <calcite-chip id="frog-count-chip" kind="inverse" scale="s" icon="check-circle" style="display:none">0 FROG</calcite-chip>
       </div>
     </calcite-navigation>
 
@@ -50,26 +52,44 @@
           <div id="active-filter-chips" class="active-filter-chips"></div>
         </div>
 
+        <!-- FROG Coverage -->
+        <calcite-block heading="FROG Coverage" open collapsible>
+          <calcite-icon slot="icon" icon="check-circle" scale="s"></calcite-icon>
+          <div id="stats-frog-summary" class="stats-container"></div>
+        </calcite-block>
+
+        <!-- By FROG Confidence -->
+        <calcite-block heading="By FROG Status" collapsible>
+          <calcite-icon slot="icon" icon="binoculars" scale="s"></calcite-icon>
+          <div id="stats-frog-confidence" class="stats-container"></div>
+        </calcite-block>
+
+        <!-- By Channel -->
+        <calcite-block heading="By Channel" open collapsible>
+          <calcite-icon slot="icon" icon="switch" scale="s"></calcite-icon>
+          <div id="stats-channel" class="stats-container"></div>
+        </calcite-block>
+
         <!-- By Dealer Type -->
-        <calcite-block heading="By Dealer Type" open collapsible>
+        <calcite-block heading="By Dealer Type" collapsible>
           <calcite-icon slot="icon" icon="organization" scale="s"></calcite-icon>
           <div id="stats-type" class="stats-container"></div>
         </calcite-block>
 
         <!-- By Company -->
-        <calcite-block heading="By Company" open collapsible>
+        <calcite-block heading="By Company" collapsible>
           <calcite-icon slot="icon" icon="label" scale="s"></calcite-icon>
           <div id="stats-company" class="stats-container"></div>
         </calcite-block>
 
         <!-- By State -->
-        <calcite-block heading="By State" open collapsible>
+        <calcite-block heading="By State" collapsible>
           <calcite-icon slot="icon" icon="map" scale="s"></calcite-icon>
           <div id="stats-states" class="stats-container"></div>
         </calcite-block>
 
         <!-- Summary -->
-        <calcite-block heading="Coverage Summary" open collapsible>
+        <calcite-block heading="Coverage Summary" collapsible>
           <calcite-icon slot="icon" icon="graph-bar" scale="s"></calcite-icon>
           <div id="stats-summary" class="stats-container"></div>
         </calcite-block>
