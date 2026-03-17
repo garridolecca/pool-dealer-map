@@ -58,6 +58,7 @@ require([
         frogLines: d.frogLines || "",
         channel: d.channel || "independent",
         channelLabel: (typeof CHANNEL_LABELS !== 'undefined' && CHANNEL_LABELS[d.channel]) || d.channel || "",
+        frogOfficial: d.frogOfficial ? "Yes" : "No",
       },
     }));
   }
@@ -137,6 +138,7 @@ require([
       { name: "frogLines", type: "string" },
       { name: "channel", type: "string" },
       { name: "channelLabel", type: "string" },
+      { name: "frogOfficial", type: "string" },
     ],
     objectIdField: "ObjectID", geometryType: "point",
     spatialReference: { wkid: 4326 },
@@ -183,14 +185,17 @@ require([
       var color = COMPANY_COLORS[a.company] || "#888";
       var threat = a.privateLabel === "Yes";
       var hasFrog = a.frogScore > 0;
+      var isOfficial = a.frogOfficial === "Yes";
       var frogColor = (typeof FROG_CONFIDENCE_COLORS !== 'undefined' && FROG_CONFIDENCE_COLORS[a.frogConfidence]) || "#555";
       var channelColor = (typeof CHANNEL_COLORS !== 'undefined' && CHANNEL_COLORS[a.channel]) || "#888";
 
       // Build FROG section
       var frogSection = '';
+      var officialBadge = isOfficial ? '<div class="detail-field"><span class="label">Official Status</span><span class="value" style="color:#00ff88;font-weight:700">AUTHORIZED FROG DEALER</span></div>' : '';
       if (hasFrog) {
         frogSection =
-          '<div class="detail-section"><h4 style="color:#00ff88">FROG Products Detected</h4>'+
+          '<div class="detail-section"><h4 style="color:#00ff88">FROG Products</h4>'+
+          officialBadge+
           '<div class="detail-field"><span class="label">Products</span><span class="value" style="color:#00ff88">'+a.frogProducts+'</span></div>'+
           '<div class="detail-field"><span class="label">Product Lines</span><span class="value">'+a.frogLines+'</span></div>'+
           '<div class="detail-field"><span class="label">Score</span><span class="value" style="color:'+frogColor+';font-weight:700">'+a.frogScore+' products</span></div>'+
@@ -369,11 +374,13 @@ require([
       var frogLow = data.filter(function(d) { return d.frogConfidence === 'low'; }).length;
       var frogHotTub = data.filter(function(d) { return d.frogLines && d.frogLines.indexOf('hot-tub') >= 0; }).length;
       var frogPool = data.filter(function(d) { return d.frogLines && d.frogLines.indexOf('pool') >= 0; }).length;
+      var frogOfficial = data.filter(function(d) { return d.frogOfficial; }).length;
       var pct = total > 0 ? ((frogDealers.length / total) * 100).toFixed(1) : '0';
 
       frogSumEl.innerHTML =
         '<div class="stat-row frog-highlight" style="cursor:default"><span class="stat-label" style="color:#00ff88;font-weight:700">FROG Dealers</span><span class="stat-value" style="color:#00ff88;font-size:14px">'+frogDealers.length.toLocaleString()+'</span></div>'+
         '<div class="stat-row" style="cursor:default"><span class="stat-label">Coverage Rate</span><span class="stat-value">'+pct+'%</span></div>'+
+        '<div class="stat-row" style="cursor:default"><span class="stat-label" style="color:#00ff88">Official Authorized</span><span class="stat-value" style="color:#00ff88">'+frogOfficial.toLocaleString()+'</span></div>'+
         '<div class="stat-row" style="cursor:default"><span class="stat-label"><span class="color-dot" style="background:#00ff88"></span> High Confidence</span><span class="stat-value">'+frogHigh.toLocaleString()+'</span></div>'+
         '<div class="stat-row" style="cursor:default"><span class="stat-label"><span class="color-dot" style="background:#f1c40f"></span> Medium</span><span class="stat-value">'+frogMed.toLocaleString()+'</span></div>'+
         '<div class="stat-row" style="cursor:default"><span class="stat-label"><span class="color-dot" style="background:#ff9800"></span> Low</span><span class="stat-value">'+frogLow.toLocaleString()+'</span></div>'+
