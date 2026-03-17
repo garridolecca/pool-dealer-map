@@ -65,6 +65,8 @@ calcite-navigation { --calcite-color-brand: #1a1a2e; }
 .welcome-list { margin: 4px 0 0 0; padding-left: 18px; font-size: 13px; line-height: 1.8; }
 .welcome-list li { opacity: 0.9; }
 .welcome-list strong { color: var(--calcite-color-brand); }
+.welcome-credits { text-align: center; padding: 12px 0 4px 0; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 12px; }
+.welcome-credits p { margin: 2px 0; font-size: 13px; }
 
 /* ── FROG highlight ─────────────────────────────── */
 .frog-highlight {

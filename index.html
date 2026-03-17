@@ -262,6 +262,30 @@
         </div>
       </div>
 
+      <div class="welcome-section">
+        <h3>Behind the Scenes</h3>
+        <p>This platform was built using <strong>Claude Code</strong> (AI-assisted development) combined with custom Node.js scraping scripts. Here's an estimate of the data collection effort:</p>
+        <table class="welcome-table">
+          <thead><tr><th>Task</th><th>Scale</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>Initial dealer scraping</td><td>11 APIs/sources, ~13,000 raw records</td><td>~3 hrs</td></tr>
+            <tr><td>Data cleaning & deduplication</td><td>13,000 -> 12,651 unique locations</td><td>~1 hr</td></tr>
+            <tr><td>Basic FROG website scan</td><td>1,793 websites, 8 pages each (~14,000 requests)</td><td>~25 min</td></tr>
+            <tr><td>Deep FROG website scan</td><td>1,793 websites, 49 pages each (~87,000 requests)</td><td>~5 hrs</td></tr>
+            <tr><td>Official FROG locator scrape</td><td>747 zip codes, 3,896 dealers found</td><td>~30 min</td></tr>
+            <tr><td>AI internet search</td><td>27+ Google/directory queries, 69 dealers found</td><td>~20 min</td></tr>
+            <tr><td>App design & development</td><td>ArcGIS map, dashboard, filters, modals</td><td>~4 hrs</td></tr>
+            <tr><td style="font-weight:700">Total estimated effort</td><td></td><td style="font-weight:700;color:var(--calcite-color-brand)">~14 hrs</td></tr>
+          </tbody>
+        </table>
+        <p style="opacity:0.7;font-size:11px;margin-top:6px">Over <strong>100,000 web pages</strong> were crawled and analyzed to build this dataset. All data was collected from publicly available sources.</p>
+      </div>
+
+      <div class="welcome-section welcome-credits">
+        <p>Built by <strong>Jhonatan Garrido-Lecca</strong></p>
+        <p style="opacity:0.5;font-size:11px">Powered by Claude Code + ArcGIS Maps SDK + Calcite Design System</p>
+      </div>
+
       <calcite-notice open icon="lock" kind="warning" scale="s">
         <div slot="title">Confidential</div>
         <div slot="message">This tool and its data are proprietary to King Technology. Do not share externally.</div>
