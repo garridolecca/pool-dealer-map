@@ -55,6 +55,13 @@ calcite-navigation { --calcite-color-brand: #1a1a2e; }
 .welcome-table td { padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); }
 .welcome-table td:last-child { text-align: right; font-weight: 600; color: var(--calcite-color-brand); }
 .welcome-table tbody tr:hover { background: rgba(255,255,255,0.04); }
+.welcome-method { padding: 8px 10px; margin: 8px 0; background: rgba(255,255,255,0.03); border-radius: 6px; border-left: 3px solid var(--calcite-color-brand); }
+.welcome-method-header { font-size: 13px; font-weight: 700; color: var(--calcite-color-brand); margin-bottom: 4px; }
+.welcome-method p { margin: 0; font-size: 12px; line-height: 1.5; opacity: 0.85; }
+.welcome-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0; }
+.welcome-metric { text-align: center; padding: 10px 6px; background: rgba(255,255,255,0.04); border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); }
+.welcome-metric-value { font-size: 22px; font-weight: 800; color: var(--calcite-color-brand); line-height: 1.2; }
+.welcome-metric-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-top: 2px; }
 .welcome-list { margin: 4px 0 0 0; padding-left: 18px; font-size: 13px; line-height: 1.8; }
 .welcome-list li { opacity: 0.9; }
 .welcome-list strong { color: var(--calcite-color-brand); }

@@ -120,59 +120,146 @@
     <div slot="content" id="welcome-content">
       <div class="welcome-section">
         <h3>What is this?</h3>
-        <p>An interactive competitive intelligence platform built for <strong>King Technology</strong> to visualize the U.S. pool and hot tub dealer landscape. It maps <strong>12,600+ dealer locations</strong> across 50 states and identifies which dealers currently carry <strong>FROG</strong> water care products.</p>
+        <p>An interactive competitive intelligence platform built for <strong>King Technology</strong> to visualize the entire U.S. pool and hot tub dealer landscape. It maps <strong>12,651 dealer locations</strong> across all 50 states and identifies which dealers currently carry <strong>FROG</strong> water care products using multiple AI-powered data collection methods.</p>
       </div>
 
       <div class="welcome-section">
-        <h3>FROG Product Scanner</h3>
-        <p>An automated scanner crawled <strong>1,793 unique dealer websites</strong> searching for mentions of FROG product lines:</p>
+        <h3>FROG Dealer Identification</h3>
+        <p>We used <strong>three complementary methods</strong> to identify which dealers carry FROG products:</p>
+
+        <div class="welcome-method">
+          <div class="welcome-method-header">1. Official FROG Dealer Locator</div>
+          <p>Scraped <strong>frogproducts.com/find-a-dealer</strong> across <strong>747 US zip codes</strong>, extracting King Technology's own authorized dealer database. Found <strong>3,896 unique authorized FROG dealers</strong> with name, address, city, state, and phone. Cross-referenced against our 12,651 dealer locations for matching.</p>
+        </div>
+
+        <div class="welcome-method">
+          <div class="welcome-method-header">2. Deep Website Scanner</div>
+          <p>Crawled <strong>49 pages per dealer</strong> across <strong>1,793 unique dealer websites</strong> searching for FROG product keywords. Pages scanned include: homepage, /products, /chemicals, /brands, /frog, /shop, /water-care, /spa-chemicals, /collections, on-site search (?s=frog), sitemaps, and dynamically discovered Frog-related links. Found <strong>304 dealers</strong> with specific FROG product mentions.</p>
+        </div>
+
+        <div class="welcome-method">
+          <div class="welcome-method-header">3. Broad Internet Search</div>
+          <p>AI agents searched Google, Yelp, Yellow Pages, Facebook business pages, Amazon, Walmart, and industry directories for FROG product keywords. Found <strong>69 additional dealers</strong> including multi-location chains like Watson's (16 stores), Aqua Quip (11 stores), Litehouse Pools (15 stores), and online retailers like SpaDepot, The Pool Factory, and Hot Tub Outpost.</p>
+        </div>
+      </div>
+
+      <div class="welcome-section">
+        <h3>FROG Products Tracked</h3>
         <div class="welcome-products">
           <div class="welcome-product-group">
             <strong>Hot Tub</strong>
-            <span>Frog @ease, Serene, Maintain, Balancing Basics</span>
+            <span>Frog @ease (Floating & In-Line), SmartChlor, Serene, Maintain, Balancing Basics</span>
           </div>
           <div class="welcome-product-group">
             <strong>Pool</strong>
-            <span>Pool Cycler, Bac PACs, Mineral Reservoir, BAM</span>
+            <span>Pool Frog Cycler, Bac PACs, Mineral Reservoir (5400/6100), BAM, Flippin' Frog, Instant Frog</span>
+          </div>
+          <div class="welcome-product-group">
+            <strong>Leap (Dealer Exclusive)</strong>
+            <span>Leap Infuzer, Torpedo Pac, Anti-Bac Mineral Pac, ALL-OUT Algaecide, Wake-Up/Hibernation</span>
           </div>
           <div class="welcome-product-group">
             <strong>Pool Solutions</strong>
             <span>No More Phos, No More Cloudy, No More Algae, Algae 90 Day</span>
           </div>
         </div>
-        <p>Dealers are scored by confidence: <span style="color:#00ff88;font-weight:600">High</span> (3+ products), <span style="color:#f1c40f;font-weight:600">Medium</span> (1-2 products), <span style="color:#ff9800;font-weight:600">Low</span> (general mention).</p>
-        <p>Additionally, <strong>3,896 authorized dealers</strong> were scraped from the official <strong>frogproducts.com</strong> dealer locator and cross-referenced with our database.</p>
+        <p>Dealers are scored by confidence: <span style="color:#00ff88;font-weight:600">High</span> (3+ products or officially authorized), <span style="color:#f1c40f;font-weight:600">Medium</span> (1-2 products or official match), <span style="color:#ff9800;font-weight:600">Low</span> (general mention only).</p>
       </div>
 
       <div class="welcome-section">
-        <h3>Data Sources</h3>
+        <h3>Dealer Data Sources</h3>
         <table class="welcome-table">
           <thead><tr><th>Source</th><th>Method</th><th>Dealers</th></tr></thead>
           <tbody>
-            <tr><td>Pentair</td><td>Salesforce dealer database</td><td>~7,400</td></tr>
-            <tr><td>Jacuzzi / Sundance</td><td>Dealer locator API</td><td>~1,430</td></tr>
-            <tr><td>Leslie's</td><td>Store locator (Demandware)</td><td>~880</td></tr>
-            <tr><td>BioGuard</td><td>SOCi store locator crawl</td><td>~860</td></tr>
-            <tr><td>Hot Spring Spas</td><td>Dealer page scraping</td><td>~590</td></tr>
-            <tr><td>PoolCorp / SCP</td><td>Map API extraction</td><td>~420</td></tr>
-            <tr><td>Bullfrog / Caldera</td><td>Sitemap crawl</td><td>~640</td></tr>
-            <tr><td>Pinch A Penny</td><td>Store locator</td><td>~310</td></tr>
-            <tr><td>Heritage Pool</td><td>Location data</td><td>~115</td></tr>
-            <tr><td>Others</td><td>Manual + HQ entries</td><td>~16</td></tr>
+            <tr><td>Pentair</td><td>Salesforce SFDC dealer export</td><td>~7,400</td></tr>
+            <tr><td>Jacuzzi / Sundance</td><td>Dealer locator API crawl</td><td>~1,430</td></tr>
+            <tr><td>Leslie's</td><td>Demandware store locator API</td><td>~880</td></tr>
+            <tr><td>BioGuard</td><td>SOCi platform multi-level crawl</td><td>~860</td></tr>
+            <tr><td>Bullfrog / Caldera</td><td>Sitemap discovery + page scraping</td><td>~640</td></tr>
+            <tr><td>Hot Spring Spas</td><td>JSON-LD structured data extraction</td><td>~590</td></tr>
+            <tr><td>PoolCorp / SCP</td><td>Map API (map_api/map.php)</td><td>~420</td></tr>
+            <tr><td>Pinch A Penny</td><td>Store locator (PoolCorp affiliate)</td><td>~310</td></tr>
+            <tr><td>Hayward</td><td>Amasty locator, geographic grid search</td><td>~200</td></tr>
+            <tr><td>Heritage Pool</td><td>Location data extract</td><td>~115</td></tr>
+            <tr><td>Others</td><td>Manual entries (King Tech HQ, big-box, online)</td><td>~16</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="welcome-section">
+        <h3>FROG Intelligence Sources</h3>
+        <table class="welcome-table">
+          <thead><tr><th>Source</th><th>Method</th><th>Results</th></tr></thead>
+          <tbody>
+            <tr><td style="color:#00ff88">frogproducts.com</td><td>POST form scrape, 747 zip codes</td><td>3,896 dealers</td></tr>
+            <tr><td>Dealer websites</td><td>Deep crawl, 49 pages x 1,793 sites</td><td>304 matches</td></tr>
+            <tr><td>Google search</td><td>AI agent, 15+ product keyword queries</td><td>56 dealers</td></tr>
+            <tr><td>Directories</td><td>AI agent, Facebook, Yelp, retail sites</td><td>40+ dealers</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="welcome-section">
+        <h3>Key Metrics</h3>
+        <div class="welcome-metrics">
+          <div class="welcome-metric">
+            <div class="welcome-metric-value">12,651</div>
+            <div class="welcome-metric-label">Total dealer locations mapped</div>
+          </div>
+          <div class="welcome-metric">
+            <div class="welcome-metric-value" style="color:#00ff88">3,832</div>
+            <div class="welcome-metric-label">FROG-tagged locations</div>
+          </div>
+          <div class="welcome-metric">
+            <div class="welcome-metric-value" style="color:#00ff88">2,665</div>
+            <div class="welcome-metric-label">Official authorized dealers matched</div>
+          </div>
+          <div class="welcome-metric">
+            <div class="welcome-metric-value">50</div>
+            <div class="welcome-metric-label">States covered</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="welcome-section">
         <h3>How to Use</h3>
         <ul class="welcome-list">
-          <li><strong>Click any stat row</strong> in the left panel to filter the map</li>
-          <li><strong>Click a dealer dot</strong> on the map to see full details</li>
-          <li>Use the <strong>binoculars button</strong> to show only FROG dealers</li>
-          <li>Toggle <strong>clustering</strong> or <strong>heatmap</strong> for density views</li>
-          <li><strong>Search</strong> by name, company, city, or state</li>
-          <li>Filter by <strong>Channel</strong>: Distribution, OEM, Independent, Direct</li>
+          <li><strong>Click any stat row</strong> in the left Dashboard panel to filter the map instantly</li>
+          <li><strong>Click a dealer dot</strong> on the map to see full details including FROG products, channel, and official status</li>
+          <li>Use the <strong>binoculars button</strong> to highlight only FROG dealers (dims all others)</li>
+          <li>Toggle <strong>clustering</strong> for grouped view or <strong>heatmap</strong> for density visualization</li>
+          <li><strong>Search</strong> by dealer name, company, city, or state in real-time</li>
+          <li>Filter by <strong>Channel</strong>: Distribution (PoolCorp/Heritage), OEM (hot tub brands), Independent, Direct, Retail</li>
+          <li>Filter by <strong>FROG Status</strong>: High, Medium, Low confidence, or Not Detected</li>
+          <li>Combine multiple filters (type + state + channel) for targeted analysis</li>
+          <li>Use <strong>Clear All</strong> button or close individual filter chips to reset</li>
         </ul>
+      </div>
+
+      <div class="welcome-section">
+        <h3>Channel Classification</h3>
+        <div class="welcome-products">
+          <div class="welcome-product-group">
+            <strong style="color:#e74c3c">Distribution</strong>
+            <span>PoolCorp, Heritage Pool Supply -- traditional wholesale distributors</span>
+          </div>
+          <div class="welcome-product-group">
+            <strong style="color:#ff9800">OEM</strong>
+            <span>Hot Spring, Jacuzzi, Sundance, Bullfrog, Caldera -- hot tub manufacturers</span>
+          </div>
+          <div class="welcome-product-group">
+            <strong style="color:#3498db">Independent</strong>
+            <span>Pentair, BioGuard, Leslie's, and other independent pool/spa dealers</span>
+          </div>
+          <div class="welcome-product-group">
+            <strong style="color:#9b59b6">Retail</strong>
+            <span>Big-box stores, online retailers (Home Depot, Walmart, Amazon)</span>
+          </div>
+          <div class="welcome-product-group">
+            <strong style="color:#00ff88">Direct</strong>
+            <span>King Technology HQ</span>
+          </div>
+        </div>
       </div>
 
       <calcite-notice open icon="lock" kind="warning" scale="s">
