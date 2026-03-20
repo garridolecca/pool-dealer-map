@@ -1,116 +1,195 @@
-# U.S. Pool & Hot Tub Dealer Intelligence Map
+# FROG Dealer Intelligence Platform
 
-**Live App: [https://garridolecca.github.io/pool-dealer-map/](https://garridolecca.github.io/pool-dealer-map/)**
+**Live App: [garridolecca.github.io/pool-dealer-map](https://garridolecca.github.io/pool-dealer-map/)**
 
-Interactive ArcGIS JavaScript application mapping pool and hot tub chemical dealers across the United States. Built as a competitive intelligence tool for King Technology (FROG Products).
+Interactive competitive intelligence platform mapping **12,651 pool and hot tub dealer locations** across all 50 US states, with AI-powered identification of **3,832 dealers carrying FROG water care products** and **priority scoring** to rank every dealer by opportunity value.
 
-## What This Maps
+Built by **Jhonatan Garrido-Lecca** using Claude Code + ArcGIS Maps SDK + Node.js.
 
-**Total: 12,016 dealer locations with real addresses and coordinates**
+---
 
-| Category | Companies | Mapped | Source |
-|----------|-----------|--------|--------|
-| **Equipment Dealers** | Pentair (NYSE: PNR) | 7,398 | Salesforce SFDC API |
-| **Hot Tub - Jacuzzi** | Jacuzzi dealer network | 1,150 | jacuzzi.com API |
-| **Retail Chains** | Leslie's Pool Supplies (NYSE: LESL) | 877 | Demandware API |
-| **Chemical Dealers** | BioGuard (KIK/Solenis) authorized retailers | 863 | local.bioguard.com |
-| **Hot Tub - Hot Spring** | Hot Spring Spas (Pentair/Watkins) | 593 | hotspring.com |
-| **Wholesale Distributors** | PoolCorp/SCP (NYSE: POOL) | 413 | poolcorp.com map API |
-| **Franchises** | Pinch A Penny (PoolCorp-owned) | 309 | pinchapenny.com API |
-| **Hot Tub - Sundance** | Sundance Spas (Jacuzzi Group) | 284 | sundancespas.com API |
-| **Wholesale Distributors** | Heritage Pool Supply (Home Depot) | 115 | Web research + locator |
-| **Big Box Retail** | Home Depot, Lowe's, Walmart, Costco, Ace | HQ/representative | Manual |
-| **Online Retailers** | In The Swim, Pool Supply World, Doheny's | HQ/warehouses | Manual |
-| **King Technology** | FROG Products HQ | 1 | Manual |
+## Key Numbers
 
-### Top States by Dealer Count
-| State | Dealers | State | Dealers |
-|-------|---------|-------|---------|
-| CA | 1,316 | NJ | 295 |
-| FL | 1,249 | WI | 289 |
-| TX | 1,135 | GA | 282 |
-| PA | 404 | WA | 281 |
-| IL | 364 | OH | 263 |
-| NY | 356 | VA | 230 |
-| AZ | 330 | IN | 132 |
-| MI | 329 | MN | 125 |
-| NC | 310 | | |
+| Metric | Value |
+|--------|-------|
+| Total dealer locations mapped | **12,651** |
+| FROG-tagged dealer locations | **3,832** |
+| Official authorized FROG dealers matched | **2,665** |
+| Unique dealer websites scanned | **1,793** |
+| Official FROG locator dealers scraped | **3,896** |
+| Web pages crawled | **100,000+** |
+| States covered | **50** |
+| Total project effort | **~14 hours** |
+
+---
+
+## Dealer Priority Scoring (0-100)
+
+Every dealer is scored on 6 factors to help King Technology prioritize outreach for direct sales:
+
+| Factor | Points | Logic |
+|--------|--------|-------|
+| **FROG Product Coverage** | 0-30 | Official authorized (+15), 3+ products (+15), some products (+10) |
+| **Channel Value** | 0-25 | Independent (25) > OEM (20) > Distribution (10) > Retail (5) |
+| **Dealer Type** | 0-15 | Independent (15) > Franchise (12) > Manufacturer (10) > Chain (8) |
+| **Market Size** | 0-10 | FL/CA/TX/AZ = 9-10, mid-tier states = 4-7, small states = 1-3 |
+| **No Private Label** | 0-10 | Not selling competing house brands = bonus |
+| **White Space** | 0-10 | States with low FROG penetration = bigger opportunity |
+
+### Tier Distribution
+
+| Tier | Score | Dealers | Description |
+|------|-------|---------|-------------|
+| **A** | 75+ | 1,472 | Top priority -- high-value independents with FROG in strong markets |
+| **B** | 55-74 | 5,107 | High value -- good conversion or expansion opportunity |
+| **C** | 35-54 | 5,982 | Moderate -- equipment-focused or smaller market dealers |
+| **D** | <35 | 530 | Lower priority -- big-box, online, or private-label competitors |
+
+---
+
+## FROG Dealer Identification
+
+Three complementary methods were used to identify which dealers carry FROG products:
+
+### 1. Official FROG Dealer Locator Scrape
+Scraped **frogproducts.com/find-a-dealer** across **747 US zip codes** using POST form requests. Found **3,896 authorized FROG dealers** with name, address, city, state, and phone. Cross-referenced against our database: **2,665 matches** confirmed.
+
+### 2. Deep Website Scanner
+Custom Node.js crawler scanned **49 pages per dealer** across **1,793 unique websites** (~87,000 total pages). Pages checked include: homepage, /products, /chemicals, /brands, /frog, /shop, /water-care, /spa-chemicals, /collections, on-site search (?s=frog), sitemaps, and dynamically discovered Frog-related links. Found **304 dealers** with specific FROG product mentions.
+
+### 3. AI-Powered Internet Search
+AI agents searched Google, Yelp, Facebook business pages, Amazon, Walmart, and industry directories for FROG product keywords. Found **69 additional dealers** including multi-location chains (Watson's, Aqua Quip, Litehouse Pools) and online retailers.
+
+### FROG Products Tracked (13 keywords across 4 lines)
+- **Hot Tub**: @ease (Floating & In-Line), SmartChlor, Serene, Maintain, Balancing Basics
+- **Pool**: Pool Frog Cycler, Bac PACs, Mineral Reservoir (5400/6100), BAM, Flippin' Frog, Instant Frog
+- **Leap (Dealer Exclusive)**: Infuzer, Torpedo Pac, Anti-Bac Mineral Pac, ALL-OUT, Wake-Up/Hibernation
+- **Pool Solutions**: No More Phos, No More Cloudy, No More Algae, Algae 90 Day
+
+---
+
+## Dealer Data Sources (12,651 locations)
+
+| Source | Method | Dealers |
+|--------|--------|---------|
+| Pentair | Salesforce SFDC dealer export | ~7,400 |
+| Jacuzzi / Sundance | Dealer locator API crawl | ~1,430 |
+| Leslie's | Demandware store locator API | ~880 |
+| BioGuard | SOCi platform multi-level crawl | ~860 |
+| Bullfrog / Caldera | Sitemap discovery + page scraping | ~640 |
+| Hot Spring Spas | JSON-LD structured data extraction | ~590 |
+| PoolCorp / SCP | Map API (map_api/map.php) | ~420 |
+| Pinch A Penny | Store locator (PoolCorp affiliate) | ~310 |
+| Hayward | Amasty locator, geographic grid search | ~200 |
+| Heritage Pool | Location data extract | ~115 |
+| Others | Manual entries (King Tech HQ, big-box, online) | ~16 |
+
+---
+
+## App Features
+
+- **Priority scoring** -- every dealer scored 0-100 with visual gauge bar and tier classification (A/B/C/D)
+- **Priority view toggle** -- resizes map dots by tier (Tier A = large green diamonds, Tier D = small gray dots)
+- **FROG Coverage dashboard** -- real-time stats showing FROG dealer counts, confidence levels, official authorized count
+- **FROG dealer highlight** -- binoculars button to show only FROG-carrying dealers
+- **Channel filter** -- Distribution (PoolCorp/Heritage), OEM (hot tub brands), Independent, Direct, Retail
+- **Interactive map** -- ArcGIS dark basemap with 12,651 dealer dots, satellite toggle
+- **Clustering & heatmap** -- toggle grouped view or density heatmap
+- **Smart filtering** -- click any stat row to filter; combine type + state + channel + FROG + priority
+- **Search** -- real-time search by dealer name, company, city, or state
+- **Detail panel** -- click any dealer for full info: priority score, FROG products, channel, official status, threat assessment
+- **Welcome modal** -- explains methodology, data sources, scoring, and usage instructions
+- **Mobile responsive** -- works on phone/tablet with collapsible panels
+
+---
+
+## Channel Classification
+
+| Channel | Companies | Description |
+|---------|-----------|-------------|
+| **Distribution** | PoolCorp, Heritage Pool Supply | Traditional wholesale distributors (now competing) |
+| **OEM** | Hot Spring, Jacuzzi, Sundance, Bullfrog, Caldera | Hot tub manufacturers (direct-to-dealer transition) |
+| **Independent** | Pentair, BioGuard, Leslie's, and others | Independent pool/spa dealers (highest value targets) |
+| **Retail** | Home Depot, Walmart, Costco, online retailers | Big-box and e-commerce |
+| **Direct** | King Technology | FROG manufacturer HQ |
+
+---
 
 ## Key Ownership Consolidation
 
 ```
 PoolCorp (NYSE: POOL)
- ├── SCP Distributors (228 sales centers)
- ├── Superior Pool Products
- ├── Pinch A Penny (291+ retail franchises) ← acquired Dec 2021
- └── Horizon Distributors (irrigation)
+ +-- SCP Distributors (228 sales centers)
+ +-- Superior Pool Products
+ +-- Pinch A Penny (291+ retail franchises)
+ +-- Horizon Distributors (irrigation)
 
 Leslie's (NYSE: LESL)
- ├── Leslie's Pool Supplies (972 stores, 37 states)
- ├── In The Swim (online + 9 DCs) ← acquired
- └── Pool Supply World (online) ← acquired
+ +-- Leslie's Pool Supplies (972 stores, 37 states)
+ +-- In The Swim (online + 9 DCs)
+ +-- Pool Supply World (online)
 
 The Home Depot
- └── Heritage Pool Supply Group (150+ wholesale, 36 states) ← acquired Jun 2024, $18.25B via SRS
+ +-- Heritage Pool Supply Group (150+ wholesale, 36 states)
 
 Pentair (NYSE: PNR)
- ├── Pentair Equipment Dealers (thousands)
- └── Watkins Wellness ← acquired 2023
-      ├── Hot Spring Spas (700-850+ dealers)
-      ├── Caldera Spas
-      ├── Freeflow Spas
-      └── Fantasy Spas
+ +-- Pentair Equipment Dealers (thousands)
+ +-- Watkins Wellness (acquired 2023)
+      +-- Hot Spring Spas (700-850+ dealers)
+      +-- Caldera Spas
+      +-- Freeflow / Fantasy Spas
 
 Jacuzzi Group
- ├── Jacuzzi (200+ dealers)
- └── Sundance Spas (200+ dealers)
-
-KIK Consumer Products / Solenis
- ├── BioGuard (~1,500 authorized retailers)
- ├── BioLab (manufacturing)
- ├── Natural Chemistry
- └── SpaGuard
+ +-- Jacuzzi (200+ dealers)
+ +-- Sundance Spas (200+ dealers)
 ```
 
-## Features
-
-- **Interactive map** with dark basemap and satellite toggle
-- **Clustering** for dense areas with toggle on/off
-- **Heatmap mode** to visualize dealer density hotspots
-- **Filter by** dealer type, company, products, and state
-- **Search** by name, company, city, or state
-- **Detail panel** with full dealer information and competitive intelligence
-- **Statistics dashboard** with breakdowns by type, company, and state
-- **Private label tracking** — identifies which companies sell their own branded chemicals (direct competitors to King Technology)
-- **Threat assessment** — flags competitors vs. potential partners
-
-## Key Intelligence Insights
-
-- **PoolCorp** (424+ locations + 291 Pinch A Penny) controls the largest distribution + retail network. Going vertical with private-label chemicals — transitioning from partner to direct competitor
-- **Heritage Pool Supply** (150+ locations) **acquired by Home Depot** (Jun 2024, $18.25B) — merging #2 wholesale distributor with 2,300+ big-box stores
-- **Leslie's** (972 stores) owns the #1 and #2 online retailers (In The Swim, Pool Supply World) — sells Leslie's branded chemicals
-- **Pentair acquired Watkins/Hot Spring** (2023) — now controls equipment + the largest hot tub dealer network (700-850+)
-- **Sun Belt concentration** — FL, TX, CA, AZ hold the densest dealer networks and fastest growth. Leslie's: TX(224), CA(172), AZ(98), FL(92)
-- **Private label threat** — PoolCorp, Leslie's, Pinch A Penny, Home Depot, Walmart, Doheny's, In The Swim all sell house-brand chemicals
+---
 
 ## Tech Stack
 
 - ArcGIS Maps SDK for JavaScript 4.31
-- Calcite Design System (dark theme)
+- Calcite Design System 2.13.2 (dark theme)
 - Client-side FeatureLayer with clustering
-- Pure HTML/CSS/JS — no build step required
+- Node.js scraping scripts (custom HTTP crawlers)
+- Claude Code (AI-assisted development)
+- Pure HTML/CSS/JS -- no build step required
+- GitHub Pages hosting
 
-## Data Sources
+---
 
-Location data compiled from public store locators, press releases, SEC filings, ScrapeHero reports, and industry directories including:
-- [PoolCorp Sales Centers](https://poolcorp.com/sales-centers/)
-- [Heritage Pool Supply Branch Locator](https://heritagepoolsupplygroup.com/en/branch-locator/)
-- [Leslie's Store Locator](https://lesliespool.com/stores)
-- [Pinch A Penny Stores](https://pinchapenny.com/stores)
-- [Hayward Dealer Locator](https://hayward.com/dealerlocator)
-- [Pentair Find-a-Dealer](https://pentair.com/en-us/find-a-dealer/pool-spa.html)
-- [BioGuard Store Locator](https://local.bioguard.com)
-- [Hot Spring Spas Dealers](https://hotspring.com/hot-tub-dealers)
-- [Bullfrog Spas Stores](https://bullfrogspas.com/stores/)
+## Project Structure
 
-Representative locations shown for chains with 100+ stores. Full dataset can be expanded by scraping the locator APIs above.
+```
+pool-dealer-map/
++-- index.html                  # App entry point
++-- app.js                      # Map logic, filters, stats, renderers
++-- styles.css                  # Dark theme styling
++-- dealers-data.js             # 12,651 dealers (auto-generated)
++-- build-data.js               # Data pipeline (merges all sources)
++-- fetch_frog_dealers.js       # Basic FROG website scanner
++-- fetch_frog_deep.js          # Deep FROG scanner (49 pages/dealer)
++-- fetch_frog_locator.js       # Official FROG locator scraper
++-- frog_internet_dealers.json  # Internet search results
++-- create-presentation.js      # PowerPoint generator
++-- FROG-Dealer-Intelligence-Platform.pptx  # Project presentation
+```
+
+---
+
+## Behind the Scenes
+
+| Task | Scale | Time |
+|------|-------|------|
+| Initial dealer scraping | 11 APIs/sources, ~13,000 raw records | ~3 hrs |
+| Data cleaning & deduplication | 13,000 -> 12,651 unique locations | ~1 hr |
+| Basic FROG website scan | 1,793 websites, 8 pages each | ~25 min |
+| Deep FROG website scan | 1,793 websites, 49 pages each (~87,000 requests) | ~5 hrs |
+| Official FROG locator scrape | 747 zip codes, 3,896 dealers found | ~30 min |
+| AI internet search | 27+ Google/directory queries | ~20 min |
+| App design & development | ArcGIS map, dashboard, filters, modals, scoring | ~4 hrs |
+| **Total** | **100,000+ web pages analyzed** | **~14 hrs** |
+
+---
+
+**Confidential** -- This tool and its data are built for King Technology. Do not share externally.

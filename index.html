@@ -229,16 +229,52 @@
       </div>
 
       <div class="welcome-section">
+        <h3>Dealer Priority Scoring</h3>
+        <p>Every dealer is scored <strong>0-100</strong> based on 6 factors to help King Technology prioritize outreach:</p>
+        <table class="welcome-table">
+          <thead><tr><th>Factor</th><th>Points</th><th>Logic</th></tr></thead>
+          <tbody>
+            <tr><td>FROG Coverage</td><td>0-30</td><td>Official authorized (+15), 3+ products (+15), some (+10)</td></tr>
+            <tr><td>Channel Value</td><td>0-25</td><td>Independent (25) > OEM (20) > Distribution (10) > Retail (5)</td></tr>
+            <tr><td>Dealer Type</td><td>0-15</td><td>Independent (15) > Franchise (12) > Manufacturer (10)</td></tr>
+            <tr><td>Market Size</td><td>0-10</td><td>FL/CA/TX/AZ highest, weighted by pool market size</td></tr>
+            <tr><td>No Private Label</td><td>0-10</td><td>Not selling competing house brands = bonus</td></tr>
+            <tr><td>White Space</td><td>0-10</td><td>Low FROG penetration in state = bigger opportunity</td></tr>
+          </tbody>
+        </table>
+        <div class="welcome-products" style="margin-top:8px">
+          <div class="welcome-product-group">
+            <strong style="color:#00ff88">Tier A (75+)</strong>
+            <span>1,472 dealers -- Top priority targets for direct sales</span>
+          </div>
+          <div class="welcome-product-group">
+            <strong style="color:#f1c40f">Tier B (55-74)</strong>
+            <span>5,107 dealers -- High value, good conversion opportunity</span>
+          </div>
+          <div class="welcome-product-group">
+            <strong style="color:#ff9800">Tier C (35-54)</strong>
+            <span>5,982 dealers -- Moderate, equipment-focused or smaller markets</span>
+          </div>
+          <div class="welcome-product-group">
+            <strong style="color:#555">Tier D (&lt;35)</strong>
+            <span>530 dealers -- Big-box, online, or private-label competitors</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="welcome-section">
         <h3>How to Use</h3>
         <ul class="welcome-list">
           <li><strong>Click any stat row</strong> in the left Dashboard panel to filter the map instantly</li>
-          <li><strong>Click a dealer dot</strong> on the map to see full details including FROG products, channel, and official status</li>
+          <li><strong>Click a dealer dot</strong> on the map to see full details including priority score, FROG products, channel, and official status</li>
+          <li>Use the <strong>arrow button</strong> to toggle <strong>Priority View</strong> -- sizes and colors dots by tier (A = large green diamonds, D = small gray)</li>
           <li>Use the <strong>binoculars button</strong> to highlight only FROG dealers (dims all others)</li>
           <li>Toggle <strong>clustering</strong> for grouped view or <strong>heatmap</strong> for density visualization</li>
           <li><strong>Search</strong> by dealer name, company, city, or state in real-time</li>
-          <li>Filter by <strong>Channel</strong>: Distribution (PoolCorp/Heritage), OEM (hot tub brands), Independent, Direct, Retail</li>
+          <li>Filter by <strong>Priority Tier</strong>: click Tier A/B/C/D in the dashboard to isolate that tier</li>
+          <li>Filter by <strong>Channel</strong>: Distribution, OEM, Independent, Direct, Retail</li>
           <li>Filter by <strong>FROG Status</strong>: High, Medium, Low confidence, or Not Detected</li>
-          <li>Combine multiple filters (type + state + channel) for targeted analysis</li>
+          <li>Combine multiple filters (e.g., Tier A + Florida + Independent) for targeted prospecting lists</li>
           <li>Use <strong>Clear All</strong> button or close individual filter chips to reset</li>
         </ul>
       </div>
