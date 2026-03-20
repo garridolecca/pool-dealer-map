@@ -68,6 +68,19 @@ calcite-navigation { --calcite-color-brand: #1a1a2e; }
 .welcome-credits { text-align: center; padding: 12px 0 4px 0; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 12px; }
 .welcome-credits p { margin: 2px 0; font-size: 13px; }
 
+/* ── Priority score bar in detail panel ─────────── */
+.priority-score-bar {
+  position: relative; height: 24px; margin: 6px 0 10px 0;
+  background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden;
+}
+.priority-score-fill {
+  height: 100%; border-radius: 4px; transition: width 0.4s ease;
+}
+.priority-score-text {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  font-size: 13px; font-weight: 800;
+}
+
 /* ── FROG highlight ─────────────────────────────── */
 .frog-highlight {
   background: rgba(0,255,136,0.08);

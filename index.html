@@ -24,6 +24,7 @@
         <calcite-action id="btn-toggle-cluster" icon="clustering" text="Enable clustering" scale="s"></calcite-action>
         <calcite-action id="btn-toggle-heat" icon="layer-heat-map" text="Heatmap" scale="s"></calcite-action>
         <calcite-action id="btn-toggle-frog" icon="binoculars" text="FROG dealers only" scale="s"></calcite-action>
+        <calcite-action id="btn-toggle-priority" icon="sort-descending-arrow" text="Priority view" scale="s"></calcite-action>
         <calcite-chip id="dealer-count-chip" kind="brand" scale="s" icon="pin">Loading...</calcite-chip>
         <calcite-chip id="frog-count-chip" kind="inverse" scale="s" icon="check-circle" style="display:none">0 FROG</calcite-chip>
       </div>
@@ -51,6 +52,12 @@
           </div>
           <div id="active-filter-chips" class="active-filter-chips"></div>
         </div>
+
+        <!-- Dealer Priority -->
+        <calcite-block heading="Dealer Priority" open collapsible>
+          <calcite-icon slot="icon" icon="sort-descending-arrow" scale="s"></calcite-icon>
+          <div id="stats-priority" class="stats-container"></div>
+        </calcite-block>
 
         <!-- FROG Coverage -->
         <calcite-block heading="FROG Coverage" open collapsible>

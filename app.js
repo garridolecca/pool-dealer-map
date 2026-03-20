@@ -19,7 +19,9 @@ require([
     state: null,          // e.g. "FL"
     channel: null,        // e.g. "distribution"
     frogConfidence: null, // e.g. "high"
+    priorityTier: null,   // e.g. "A"
   };
+  var priorityViewEnabled = false;
 
   // ═══════════════════════════════════════════════════
   // MAP
@@ -59,6 +61,9 @@ require([
         channel: d.channel || "independent",
         channelLabel: (typeof CHANNEL_LABELS !== 'undefined' && CHANNEL_LABELS[d.channel]) || d.channel || "",
         frogOfficial: d.frogOfficial ? "Yes" : "No",
+        priorityScore: d.priorityScore || 0,
+        priorityTier: d.priorityTier || "D",
+        priorityLabel: (typeof PRIORITY_LABELS !== 'undefined' && PRIORITY_LABELS[d.priorityTier]) || d.priorityTier || "",
       },
     }));
   }
@@ -95,6 +100,19 @@ require([
     type: "unique-value", field: "frogConfidence",
     defaultSymbol: { type: "simple-marker", color: [100,100,100,0.3], size: 3, outline: { color: [255,255,255,0.1], width: 0 } },
     defaultLabel: "No FROG", uniqueValueInfos: frogRendererInfos,
+  };
+
+  // Priority renderer — highlights dealers by priority tier
+  var priorityRendererInfos = [
+    { value: "A", symbol: { type: "simple-marker", color: "#00ff88", size: 12, outline: { color: "#fff", width: 2 }, style: "diamond" }, label: "Tier A" },
+    { value: "B", symbol: { type: "simple-marker", color: "#f1c40f", size: 9, outline: { color: "#fff", width: 1 }, style: "circle" }, label: "Tier B" },
+    { value: "C", symbol: { type: "simple-marker", color: "#ff9800", size: 6, outline: { color: [255,255,255,0.3], width: 0.5 }, style: "circle" }, label: "Tier C" },
+    { value: "D", symbol: { type: "simple-marker", color: [85,85,85,0.4], size: 4, outline: { color: [255,255,255,0.1], width: 0 }, style: "circle" }, label: "Tier D" },
+  ];
+  var priorityRenderer = {
+    type: "unique-value", field: "priorityTier",
+    defaultSymbol: { type: "simple-marker", color: "#555", size: 4, outline: { color: [255,255,255,0.1], width: 0 } },
+    defaultLabel: "Unscored", uniqueValueInfos: priorityRendererInfos,
   };
 
   var clusterConfig = {
@@ -139,6 +157,9 @@ require([
       { name: "channel", type: "string" },
       { name: "channelLabel", type: "string" },
       { name: "frogOfficial", type: "string" },
+      { name: "priorityScore", type: "integer" },
+      { name: "priorityTier", type: "string" },
+      { name: "priorityLabel", type: "string" },
     ],
     objectIdField: "ObjectID", geometryType: "point",
     spatialReference: { wkid: 4326 },
@@ -208,7 +229,19 @@ require([
           '</div>';
       }
 
+      // Priority section
+      var prioColor = (typeof PRIORITY_COLORS !== 'undefined' && PRIORITY_COLORS[a.priorityTier]) || "#555";
+      var prioSection =
+        '<div class="detail-section"><h4 style="color:'+prioColor+'">Priority Score</h4>'+
+        '<div class="priority-score-bar">'+
+          '<div class="priority-score-fill" style="width:'+a.priorityScore+'%;background:'+prioColor+'"></div>'+
+          '<span class="priority-score-text" style="color:'+prioColor+'">'+a.priorityScore+'/100</span>'+
+        '</div>'+
+        '<div class="detail-field"><span class="label">Tier</span><span class="value" style="color:'+prioColor+';font-weight:700">'+a.priorityLabel+'</span></div>'+
+        '</div>';
+
       if (db) db.innerHTML =
+        prioSection+
         '<div class="detail-section"><h4 style="color:'+color+'">Company</h4>'+
         '<div class="detail-field"><span class="label">Name</span><span class="value">'+a.name+'</span></div>'+
         '<div class="detail-field"><span class="label">Company</span><span class="value" style="color:'+color+'">'+a.company+'</span></div>'+
@@ -243,6 +276,7 @@ require([
     if (activeFilters.state) clauses.push("state = '" + activeFilters.state + "'");
     if (activeFilters.channel) clauses.push("channel = '" + activeFilters.channel + "'");
     if (activeFilters.frogConfidence) clauses.push("frogConfidence = '" + activeFilters.frogConfidence + "'");
+    if (activeFilters.priorityTier) clauses.push("priorityTier = '" + activeFilters.priorityTier + "'");
     if (frogFilterEnabled) clauses.push("frogScore > 0");
     if (searchText) {
       var esc = searchText.replace(/'/g, "''");
@@ -266,6 +300,7 @@ require([
       if (activeFilters.state && d.state !== activeFilters.state) return false;
       if (activeFilters.channel && d.channel !== activeFilters.channel) return false;
       if (activeFilters.frogConfidence && d.frogConfidence !== activeFilters.frogConfidence) return false;
+      if (activeFilters.priorityTier && d.priorityTier !== activeFilters.priorityTier) return false;
       if (frogFilterEnabled && (!d.frogScore || d.frogScore === 0)) return false;
       if (searchText) {
         if ((d.name||"").toLowerCase().indexOf(searchText) < 0 &&
@@ -293,7 +328,7 @@ require([
   function renderActiveFilters() {
     var container = document.getElementById("active-filters");
     var chips = document.getElementById("active-filter-chips");
-    var hasAny = activeFilters.type || activeFilters.company || activeFilters.state || activeFilters.channel || activeFilters.frogConfidence || frogFilterEnabled;
+    var hasAny = activeFilters.type || activeFilters.company || activeFilters.state || activeFilters.channel || activeFilters.frogConfidence || activeFilters.priorityTier || frogFilterEnabled;
 
     container.style.display = hasAny ? "block" : "none";
     chips.innerHTML = "";
@@ -316,6 +351,14 @@ require([
       chipFC.textContent = "FROG: " + activeFilters.frogConfidence.charAt(0).toUpperCase() + activeFilters.frogConfidence.slice(1);
       chipFC.addEventListener("calciteChipClose", function() { activeFilters.frogConfidence = null; applyFilters(); });
       chips.appendChild(chipFC);
+    }
+    if (activeFilters.priorityTier) {
+      var chipPr = document.createElement("calcite-chip");
+      chipPr.setAttribute("scale", "s"); chipPr.setAttribute("kind", "brand"); chipPr.setAttribute("closable", "");
+      var prLabel = (typeof PRIORITY_LABELS !== 'undefined' && PRIORITY_LABELS[activeFilters.priorityTier]) || activeFilters.priorityTier;
+      chipPr.textContent = prLabel;
+      chipPr.addEventListener("calciteChipClose", function() { activeFilters.priorityTier = null; applyFilters(); });
+      chips.appendChild(chipPr);
     }
     if (activeFilters.channel) {
       var chipCh = document.createElement("calcite-chip");
@@ -351,7 +394,11 @@ require([
   document.getElementById("btn-clear-all").addEventListener("click", function() {
     activeFilters.type = null; activeFilters.company = null; activeFilters.state = null;
     activeFilters.channel = null; activeFilters.frogConfidence = null;
+    activeFilters.priorityTier = null;
     frogFilterEnabled = false;
+    priorityViewEnabled = false;
+    var prioBtn = document.getElementById("btn-toggle-priority");
+    if (prioBtn) prioBtn.removeAttribute("active");
     document.getElementById("btn-toggle-frog").removeAttribute("active");
     document.getElementById("search-input").value = "";
     dealerLayer.renderer = companyRenderer;
@@ -393,6 +440,50 @@ require([
         frogChip.textContent = frogDealers.length.toLocaleString() + " FROG";
         frogChip.style.display = "inline-flex";
       }
+    }
+
+    // ── By Priority Tier (clickable) ──
+    var prioEl = document.getElementById("stats-priority");
+    if (prioEl) {
+      var prioCounts = {};
+      var prioScoreSum = 0;
+      data.forEach(function(d) {
+        var tier = d.priorityTier || 'D';
+        prioCounts[tier] = (prioCounts[tier] || 0) + 1;
+        prioScoreSum += (d.priorityScore || 0);
+      });
+      var avgScore = total > 0 ? Math.round(prioScoreSum / total) : 0;
+      prioEl.innerHTML = "";
+
+      // Average score row
+      var avgRow = document.createElement("div");
+      avgRow.className = "stat-row";
+      avgRow.style.cursor = "default";
+      avgRow.innerHTML = '<span class="stat-label" style="font-weight:700">Avg Score</span>' +
+        '<div class="stat-bar-container"><div class="stat-bar" style="width:'+avgScore+'%;background:linear-gradient(90deg,#ff9800,#f1c40f,#00ff88)"></div></div>' +
+        '<span class="stat-value" style="font-size:14px">'+avgScore+'/100</span>';
+      prioEl.appendChild(avgRow);
+
+      var prioOrder = ['A', 'B', 'C', 'D'];
+      var prioColors = (typeof PRIORITY_COLORS !== 'undefined') ? PRIORITY_COLORS : { A: '#00ff88', B: '#f1c40f', C: '#ff9800', D: '#555' };
+      var prioLabels = (typeof PRIORITY_LABELS !== 'undefined') ? PRIORITY_LABELS : {};
+      var prioMax = 1;
+      prioOrder.forEach(function(t) { if ((prioCounts[t] || 0) > prioMax) prioMax = prioCounts[t]; });
+      prioOrder.forEach(function(tier) {
+        var count = prioCounts[tier] || 0;
+        if (count === 0) return;
+        var color = prioColors[tier] || '#555';
+        var label = prioLabels[tier] || ('Tier ' + tier);
+        var isActive = activeFilters.priorityTier === tier;
+        var row = document.createElement("div");
+        row.className = "stat-row" + (isActive ? " active" : "");
+        row.innerHTML =
+          '<span class="stat-label"><span class="color-dot" style="background:'+color+'"></span> '+label+'</span>'+
+          '<div class="stat-bar-container"><div class="stat-bar" style="width:'+(count/prioMax*100)+'%;background:'+color+'"></div></div>'+
+          '<span class="stat-value">'+count.toLocaleString()+'</span>';
+        row.addEventListener("click", function() { toggleFilter("priorityTier", tier); });
+        prioEl.appendChild(row);
+      });
     }
 
     // ── By FROG Confidence (clickable) ──
@@ -567,9 +658,24 @@ require([
       dealerLayer.renderer = heatmapRenderer; dealerLayer.featureReduction = null;
       clusterEnabled = false; document.getElementById("btn-toggle-cluster").removeAttribute("active");
     } else {
-      dealerLayer.renderer = frogFilterEnabled ? frogRenderer : companyRenderer;
+      dealerLayer.renderer = frogFilterEnabled ? frogRenderer : (priorityViewEnabled ? priorityRenderer : companyRenderer);
       if (clusterEnabled) dealerLayer.featureReduction = clusterConfig;
     }
+  });
+
+  // Priority view toggle
+  document.getElementById("btn-toggle-priority").addEventListener("click", function() {
+    priorityViewEnabled = !priorityViewEnabled;
+    if (priorityViewEnabled) {
+      this.setAttribute("active", "");
+      frogFilterEnabled = false;
+      document.getElementById("btn-toggle-frog").removeAttribute("active");
+      if (!heatmapEnabled) dealerLayer.renderer = priorityRenderer;
+    } else {
+      this.removeAttribute("active");
+      if (!heatmapEnabled) dealerLayer.renderer = companyRenderer;
+    }
+    applyFilters();
   });
 
   // FROG filter toggle
@@ -577,6 +683,8 @@ require([
     frogFilterEnabled = !frogFilterEnabled;
     if (frogFilterEnabled) {
       this.setAttribute("active", "");
+      priorityViewEnabled = false;
+      document.getElementById("btn-toggle-priority").removeAttribute("active");
       if (!heatmapEnabled) dealerLayer.renderer = frogRenderer;
     } else {
       this.removeAttribute("active");
